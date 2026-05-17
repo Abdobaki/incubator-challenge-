@@ -46,26 +46,15 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group" style={{ textDecoration: 'none' }}>
-            <div style={{
-              width: 42,
-              height: 42,
-              borderRadius: 12,
-              background: 'linear-gradient(135deg, #3B82F6, #6D28D9)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontFamily: 'Sora',
-              fontWeight: 800,
-              fontSize: '0.9rem',
-              color: 'white',
-              boxShadow: '0 0 20px rgba(59,130,246,0.3)',
-              transition: 'all 0.3s ease',
-              flexShrink: 0,
-            }}
-            className="group-hover:shadow-glow-blue group-hover:scale-105"
-            >
-              BIS
-            </div>
+            <img
+              src="/images/gallery/logo.png"
+              alt="BIS Incubator"
+              style={{
+                width: 42, height: 42, borderRadius: 12, objectFit: 'contain',
+                flexShrink: 0,
+              }}
+              className="group-hover:scale-105"
+            />
             <div className="hidden sm:block">
               <p style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '0.95rem', color: '#F0F4FF', lineHeight: 1.2 }}>
                 BIS Incubator
@@ -77,12 +66,12 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-2">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`nav-link px-3 py-2 rounded-lg transition-colors ${
+                className={`nav-link px-4 py-2 rounded-lg transition-colors ${
                   location.pathname === link.path
                     ? 'active text-white bg-white/5'
                     : 'hover:bg-white/5'

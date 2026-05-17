@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Star, ExternalLink, Users } from 'lucide-react';
+import { ArrowRight, Star, ExternalLink, Users, Sprout, MessageSquare, Medal } from 'lucide-react';
 import { startups, testimonials } from '../../data/index';
 import { SectionHeader, Reveal } from '../ui/index';
 
@@ -15,7 +15,7 @@ export function StartupsPreview() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-16">
           <SectionHeader
-            tag="🌱 Portfolio"
+            tag={<><Sprout size={14} /> Portfolio</>}
             title={<>Our <span className="gradient-text">Success Stories</span></>}
             subtitle="Meet the innovative startups that have graduated from BIS Incubator and are changing Algeria."
             align="left"
@@ -82,7 +82,7 @@ export function StartupsPreview() {
                       padding: '2px 8px',
                       borderRadius: 6,
                     }}>
-                      🏅 {a}
+                      <Medal size={12} style={{marginRight: 4}} /> {a}
                     </span>
                   ))}
                 </div>
@@ -122,7 +122,7 @@ export function Testimonials() {
       <div className="orb orb-violet" style={{ width: 400, height: 400, top: '20%', right: '-100px', opacity: 0.1 }} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          tag="💬 Founder Stories"
+          tag={<><MessageSquare size={14} /> Founder Stories</>}
           title={<>What Our <span className="gradient-text">Founders Say</span></>}
           subtitle="Real stories from real entrepreneurs who built their startups at BIS Incubator."
         />

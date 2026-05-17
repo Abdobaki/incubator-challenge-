@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Calendar } from 'lucide-react';
+import { ArrowRight, Calendar, Newspaper, Trophy, DollarSign, Target, Medal, Handshake, Megaphone } from 'lucide-react';
 import { partners, newsArticles } from '../../data/index';
 import { SectionHeader, Reveal } from '../ui/index';
+import { useTranslation } from '../../hooks/useTranslation';
 
 // ═══════════════════════════════════════════════
 // PARTNERS MARQUEE
@@ -69,11 +70,13 @@ export function Partners() {
 // LATEST NEWS
 // ═══════════════════════════════════════════════
 export function LatestNews() {
+  const { t, localeData, lang } = useTranslation();
   const latest = newsArticles.slice(0, 3);
 
   const formatDate = (dateStr) => {
     const d = new Date(dateStr);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const loc = lang === 'ar' ? 'ar-DZ' : lang === 'fr' ? 'fr-FR' : 'en-US';
+    return d.toLocaleDateString(loc, { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
   return (
@@ -81,7 +84,7 @@ export function LatestNews() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-16">
           <SectionHeader
-            tag="📰 Latest News"
+            tag={<><Newspaper size={14} /> Latest News</>}
             title={<>Incubator <span className="gradient-text">News & Updates</span></>}
             subtitle="Stay informed about the latest from our ecosystem."
             align="left"
@@ -109,11 +112,11 @@ export function LatestNews() {
                     overflow: 'hidden',
                   }}
                 >
-                  {article.category === 'Award' ? '🏆' : 
-                   article.category === 'Funding' ? '💰' :
-                   article.category === 'Program' ? '🎯' :
-                   article.category === 'Achievement' ? '🥇' :
-                   article.category === 'Partnership' ? '🤝' : '📣'}
+                  {article.category === 'Award' ? <Trophy size={24} style={{opacity: 0.5}} /> : 
+                   article.category === 'Funding' ? <DollarSign size={24} style={{opacity: 0.5}} /> :
+                   article.category === 'Program' ? <Target size={24} style={{opacity: 0.5}} /> :
+                   article.category === 'Achievement' ? <Medal size={24} style={{opacity: 0.5}} /> :
+                   article.category === 'Partnership' ? <Handshake size={24} style={{opacity: 0.5}} /> : <Megaphone size={24} style={{opacity: 0.5}} />}
                 </div>
 
                 {/* Category + date */}
@@ -137,7 +140,7 @@ export function LatestNews() {
                   lineHeight: 1.45,
                   marginBottom: 10,
                 }}>
-                  {article.title}
+                  {localeData(article, 'title')}
                 </h3>
 
                 <p style={{
@@ -151,7 +154,7 @@ export function LatestNews() {
                   WebkitBoxOrient: 'vertical',
                   overflow: 'hidden',
                 }}>
-                  {article.excerpt}
+                  {localeData(article, 'excerpt')}
                 </p>
 
                 <div className="flex items-center justify-between">

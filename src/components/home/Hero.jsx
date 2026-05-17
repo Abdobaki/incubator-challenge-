@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Play, ChevronDown, Sparkles } from 'lucide-react';
+import { ArrowRight, Play, ChevronDown, Sparkles, Trophy, Rocket } from 'lucide-react';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const TYPED_WORDS = ['Innovation', 'Startups', 'Entrepreneurs', 'the Future'];
 
@@ -38,6 +39,7 @@ function Particles() {
 }
 
 export default function Hero() {
+  const { t } = useTranslation();
   const [wordIndex, setWordIndex] = useState(0);
   const [displayed, setDisplayed] = useState('');
   const [typing, setTyping] = useState(true);
@@ -109,7 +111,7 @@ export default function Hero() {
               }}
             >
               <Sparkles size={12} />
-              Algeria's #1 University Incubator
+              {t('hero.tag') || "Algeria's #1 University Incubator"}
             </div>
 
             {/* Headline */}
@@ -320,7 +322,7 @@ export default function Hero() {
                 gap: 10,
               }}
             >
-              <div style={{ fontSize: '1.5rem' }}>🏆</div>
+              <Trophy size={24} />
               <div>
                 <p style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '0.85rem', color: '#F0F4FF' }}>#1 in Algeria</p>
                 <p style={{ fontFamily: 'Outfit', fontSize: '0.72rem', color: 'rgba(240,244,255,0.45)' }}>Ranked 2024</p>
@@ -342,7 +344,7 @@ export default function Hero() {
                 gap: 10,
               }}
             >
-              <div style={{ fontSize: '1.5rem' }}>🚀</div>
+              <Rocket size={24} />
               <div>
                 <p style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '0.85rem', color: '#F0F4FF' }}>50M+ DZD Raised</p>
                 <p style={{ fontFamily: 'Outfit', fontSize: '0.72rem', color: 'rgba(240,244,255,0.45)' }}>By portfolio startups</p>

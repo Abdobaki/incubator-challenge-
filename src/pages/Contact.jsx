@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { MapPin, Mail, Phone, Facebook, Linkedin, Twitter, Instagram, Send, CheckCircle } from 'lucide-react';
+import { MapPin, Mail, Phone, Facebook, Linkedin, Twitter, Instagram, Send, CheckCircle, Map, PartyPopper } from 'lucide-react';
 import { Reveal } from '../components/ui/index';
+import { useTranslation } from '../hooks/useTranslation';
 
 const contactInfo = [
   { icon: MapPin, label: 'Address', value: 'Université de M\'sila, BP 166, Route Ichbilia, 28000 M\'sila, Algérie', color: '#3B82F6' },
@@ -25,6 +26,7 @@ const reasons = [
 ];
 
 export default function Contact() {
+  const { t } = useTranslation();
   const [form, setForm] = useState({ name: '', email: '', organization: '', reason: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -45,7 +47,7 @@ export default function Contact() {
       }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <div className="section-tag">📬 Contact Us</div>
+            <div className="section-tag"><Mail size={14} /> Contact Us</div>
             <h1 style={{ fontFamily: 'Sora', fontWeight: 800, fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: '#F0F4FF', lineHeight: 1.1, marginBottom: 20, maxWidth: 680 }}>
               Let's Build Something <span className="gradient-text">Amazing Together</span>
             </h1>
@@ -130,7 +132,7 @@ export default function Contact() {
                   }}
                   onClick={() => window.open('https://maps.google.com/?q=Université+de+M\'sila', '_blank')}
                 >
-                  <div style={{ fontSize: '3rem' }}>🗺️</div>
+                  <Map size={48} style={{ opacity: 0.5 }} />
                   <p style={{ fontFamily: 'Sora', fontWeight: 600, fontSize: '0.88rem', color: '#60A5FA' }}>
                     View on Google Maps
                   </p>
@@ -156,7 +158,7 @@ export default function Contact() {
                         <CheckCircle size={40} style={{ color: '#4ADE80' }} />
                       </div>
                       <h3 style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '1.4rem', color: '#F0F4FF', marginBottom: 12 }}>
-                        Message Sent! 🎉
+                        Message Sent! <PartyPopper size={20} style={{ marginLeft: 8 }} />
                       </h3>
                       <p style={{ color: 'rgba(240,244,255,0.6)', lineHeight: 1.7, maxWidth: 400, margin: '0 auto' }}>
                         Thank you for reaching out to BIS Incubator. Our team will review your message and get back to you within 2 business days.

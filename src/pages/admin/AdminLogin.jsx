@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from '../../hooks/useTranslation';
 
 export function AdminLogin() {
+  const { t } = useTranslation();
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -40,20 +42,19 @@ export function AdminLogin() {
       <div style={{ width: '100%', maxWidth: 420, position: 'relative', zIndex: 1 }}>
         {/* Logo */}
         <div className="text-center mb-10">
-          <div style={{
-            width: 64, height: 64, borderRadius: 18,
-            background: 'linear-gradient(135deg, #3B82F6, #6D28D9)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontFamily: 'Sora', fontWeight: 800, fontSize: '1.2rem', color: 'white',
-            boxShadow: '0 0 40px rgba(59,130,246,0.4)', margin: '0 auto 16px',
-          }}>
-            BIS
-          </div>
+          <img
+            src="/images/gallery/logo.png"
+            alt="BIS Incubator"
+            style={{
+              width: 64, height: 64, borderRadius: 18, objectFit: 'contain',
+              boxShadow: '0 0 40px rgba(59,130,246,0.4)', margin: '0 auto 16px',
+            }}
+          />
           <h1 style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '1.3rem', color: '#F0F4FF', marginBottom: 6 }}>
-            Admin Portal
+            {t('admin.login.title')}
           </h1>
           <p style={{ fontFamily: 'Outfit', fontSize: '0.88rem', color: 'rgba(240,244,255,0.45)' }}>
-            BIS Incubator Management System
+            {t('admin.login.subtitle')}
           </p>
         </div>
 
@@ -61,13 +62,13 @@ export function AdminLogin() {
           <form onSubmit={handleLogin}>
             <div className="mb-5">
               <label style={{ fontFamily: 'Sora', fontWeight: 600, fontSize: '0.82rem', color: 'rgba(240,244,255,0.6)', display: 'block', marginBottom: 8 }}>
-                Email Address
-              </label>
-              <input
-                type="email"
-                required
-                className="input-glass"
-                placeholder="admin@bis.dz"
+                  {t('admin.login.email')}
+                </label>
+                <input
+                  type="email"
+                  required
+                  className="input-glass"
+                  placeholder="admin@bis.dz"
                 value={form.email}
                 onChange={e => setForm({ ...form, email: e.target.value })}
               />
@@ -75,8 +76,8 @@ export function AdminLogin() {
 
             <div className="mb-6">
               <label style={{ fontFamily: 'Sora', fontWeight: 600, fontSize: '0.82rem', color: 'rgba(240,244,255,0.6)', display: 'block', marginBottom: 8 }}>
-                Password
-              </label>
+                  {t('admin.login.password')}
+                </label>
               <div style={{ position: 'relative' }}>
                 <input
                   type={showPw ? 'text' : 'password'}
@@ -116,20 +117,20 @@ export function AdminLogin() {
               style={{ width: '100%', justifyContent: 'center', fontSize: '0.95rem', padding: '13px 24px' }}
               disabled={loading}
             >
-              {loading ? (
+                {loading ? (
                 <div style={{
                   width: 18, height: 18, border: '2px solid rgba(255,255,255,0.3)',
                   borderTopColor: 'white', borderRadius: '50%', animation: 'spin 0.8s linear infinite',
                 }} />
               ) : (
                 <>
-                  <Lock size={16} /> Sign In to Dashboard
+                  <Lock size={16} /> {t('admin.login.signIn')}
                 </>
               )}
             </button>
           </form>
           <p style={{ fontFamily: 'JetBrains Mono', fontSize: '0.7rem', color: 'rgba(240,244,255,0.3)', textAlign: 'center', marginTop: 20 }}>
-            Demo: admin@bis.dz / admin123
+            {t('admin.login.demo')}
           </p>
         </div>
       </div>

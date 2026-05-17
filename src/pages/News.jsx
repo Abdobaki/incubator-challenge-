@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, Clock, Search, ArrowRight, BookOpen } from 'lucide-react';
+import { Calendar, Clock, Search, ArrowRight, BookOpen, Newspaper, Trophy, DollarSign, Target, Medal, Handshake, Megaphone, MailX } from 'lucide-react';
 import { newsArticles } from '../data/index';
 import { SectionHeader, Reveal } from '../components/ui/index';
+import { useTranslation } from '../hooks/useTranslation';
 
 const categories = ['All', 'Award', 'Funding', 'Program', 'Achievement', 'Partnership', 'Announcement'];
 
 export default function News() {
+  const { t, localeData, lang } = useTranslation();
   const [activeCategory, setActiveCategory] = useState('All');
   const [search, setSearch] = useState('');
   useEffect(() => { window.scrollTo(0, 0); }, []);
@@ -20,10 +22,15 @@ export default function News() {
   const featured = newsArticles.find(a => a.featured);
   const rest = filtered.filter(a => !a.featured || search || activeCategory !== 'All');
 
-  const formatDate = (d) => new Date(d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  const formatDate = (d) => {
+    const loc = lang === 'ar' ? 'ar-DZ' : lang === 'fr' ? 'fr-FR' : 'en-US';
+    return new Date(d).toLocaleDateString(loc, { month: 'long', day: 'numeric', year: 'numeric' });
+  };
 
-  const catEmoji = {
-    Award: '🏆', Funding: '💰', Program: '🎯', Achievement: '🥇', Partnership: '🤝', Announcement: '📣'
+  const getCategoryIcon = (category, size = 14) => {
+    const icons = { Award: Trophy, Funding: DollarSign, Program: Target, Achievement: Medal, Partnership: Handshake, Announcement: Megaphone };
+    const Icon = icons[category] || Newspaper;
+    return <Icon size={size} />;
   };
 
   return (
@@ -35,7 +42,7 @@ export default function News() {
       }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <div className="section-tag">📰 News & Blog</div>
+            <div className="section-tag"><Newspaper size={14} /> News & Blog</div>
             <h1 style={{ fontFamily: 'Sora', fontWeight: 800, fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: '#F0F4FF', lineHeight: 1.1, marginBottom: 20, maxWidth: 680 }}>
               Stories from the <span className="gradient-text">Innovation Frontier</span>
             </h1>
@@ -73,7 +80,7 @@ export default function News() {
                     overflow: 'hidden',
                   }}>
                     <div className="orb orb-blue" style={{ width: 300, height: 300, top: '-80px', left: '-60px', opacity: 0.25 }} />
-                    🏆
+                    <Trophy size={48} style={{ opacity: 0.3 }} />
                   </div>
                   {/* Content */}
                   <div style={{ padding: '40px 40px' }}>
@@ -91,14 +98,14 @@ export default function News() {
                         FEATURED
                       </span>
                       <span className={`badge ${featured.categoryColor}`} style={{ fontSize: '0.68rem' }}>
-                        {catEmoji[featured.category]} {featured.category}
+                        {getCategoryIcon(featured.category)} {featured.category}
                       </span>
                     </div>
                     <h2 style={{ fontFamily: 'Sora', fontWeight: 800, fontSize: 'clamp(1.2rem, 2.5vw, 1.6rem)', color: '#F0F4FF', marginBottom: 14, lineHeight: 1.3 }}>
-                      {featured.title}
+                      {localeData(featured, 'title')}
                     </h2>
                     <p style={{ color: 'rgba(240,244,255,0.6)', fontSize: '0.95rem', lineHeight: 1.75, marginBottom: 24 }}>
-                      {featured.excerpt}
+                      {localeData(featured, 'excerpt')}
                     </p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
@@ -151,7 +158,7 @@ export default function News() {
                     cursor: 'pointer', transition: 'all 0.2s',
                   }}
                 >
-                  {cat !== 'All' ? `${catEmoji[cat]} ` : ''}{cat}
+                  {cat !== 'All' ? <>{getCategoryIcon(cat)} </> : ''}{cat}
                 </button>
               ))}
             </div>
@@ -176,24 +183,24 @@ export default function News() {
                       fontSize: '2.8rem',
                     }}
                   >
-                    {catEmoji[article.category] || '📰'}
+                    {getCategoryIcon(article.category, 40)}
                   </div>
                   <div className="flex items-center justify-between mb-3">
                     <span className={`badge ${article.categoryColor}`} style={{ fontSize: '0.68rem' }}>
-                      {catEmoji[article.category]} {article.category}
+                      {getCategoryIcon(article.category)} {article.category}
                     </span>
                     <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.68rem', color: 'rgba(240,244,255,0.3)' }}>
                       {formatDate(article.date)}
                     </span>
                   </div>
                   <h3 style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '0.97rem', color: '#F0F4FF', lineHeight: 1.45, marginBottom: 10 }}>
-                    {article.title}
+                    {localeData(article, 'title')}
                   </h3>
                   <p style={{
                     color: 'rgba(240,244,255,0.5)', fontSize: '0.85rem', lineHeight: 1.65, marginBottom: 16,
                     display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden',
                   }}>
-                    {article.excerpt}
+                    {localeData(article, 'excerpt')}
                   </p>
                   <div className="flex items-center justify-between">
                     <span style={{ fontFamily: 'Outfit', fontSize: '0.78rem', color: 'rgba(240,244,255,0.35)' }}>
@@ -213,7 +220,7 @@ export default function News() {
 
           {filtered.length === 0 && (
             <div className="text-center py-20">
-              <p style={{ fontSize: '3rem', marginBottom: 16 }}>📭</p>
+              <MailX size={48} style={{ marginBottom: 16 }} />
               <p style={{ fontFamily: 'Sora', fontWeight: 600, color: 'rgba(240,244,255,0.5)', fontSize: '1.1rem' }}>No articles found</p>
             </div>
           )}

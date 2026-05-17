@@ -1,17 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Rocket, Users, GraduationCap, DollarSign, Network, Globe, ArrowRight } from 'lucide-react';
+import { Rocket, Users, GraduationCap, DollarSign, Network, Globe, ArrowRight, Target } from 'lucide-react';
 import { programs } from '../../data/index';
 import { SectionHeader, Reveal } from '../ui/index';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const iconMap = { Rocket, Users, GraduationCap, DollarSign, Network, Globe };
 
 export default function ProgramsOverview() {
+  const { t, localeData } = useTranslation();
   return (
     <section style={{ padding: '100px 0', position: 'relative' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          tag="🎯 What We Offer"
+          tag={<><Target size={14} /> What We Offer</>}
           title={<>World-Class <span className="gradient-text">Programs</span><br />for Ambitious Founders</>}
           subtitle="From idea to global startup — our comprehensive programs cover every stage of your entrepreneurial journey with expert support and resources."
         />
@@ -58,7 +60,7 @@ export default function ProgramsOverview() {
                     color: '#F0F4FF',
                     marginBottom: 10,
                   }}>
-                    {program.title}
+                    {localeData(program, 'title')}
                   </h3>
                   <p style={{
                     color: 'rgba(240,244,255,0.55)',
@@ -66,7 +68,7 @@ export default function ProgramsOverview() {
                     lineHeight: 1.65,
                     marginBottom: 20,
                   }}>
-                    {program.description}
+                    {localeData(program, 'description')}
                   </p>
 
                   {/* Features */}

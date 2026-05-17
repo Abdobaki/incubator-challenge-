@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const LanguageContext = createContext();
 
@@ -8,13 +8,27 @@ export const languages = {
   ar: { code: 'ar', label: 'ع', direction: 'rtl', name: 'العربية' },
 };
 
+function getInitialLang() {
+  try {
+    const saved = localStorage.getItem('bis-lang');
+    if (saved && languages[saved]) return saved;
+  } catch {}
+  return 'en';
+}
+
 export function LanguageProvider({ children }) {
-  const [lang, setLang] = useState('en');
+  const [lang, setLang] = useState(getInitialLang);
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = languages[lang].direction;
+  }, [lang]);
 
   const switchLang = (code) => {
     setLang(code);
     document.documentElement.lang = code;
     document.documentElement.dir = languages[code].direction;
+    try { localStorage.setItem('bis-lang', code); } catch {}
   };
 
   return (
