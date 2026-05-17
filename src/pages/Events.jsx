@@ -136,7 +136,7 @@ function EventCard({ event, i, localeData, lang = 'en' }) {
             )}
 
             {/* Tags */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 mb-4">
               {event.tags.map(tag => (
                 <span key={tag} style={{
                   fontFamily: 'JetBrains Mono',
@@ -151,16 +151,14 @@ function EventCard({ event, i, localeData, lang = 'en' }) {
                 </span>
               ))}
             </div>
-          </div>
 
-          {/* CTA */}
-          {!isPast && (
-            <div className="flex-shrink-0 hidden sm:block">
-              <button className="btn-primary" style={{ fontSize: '0.85rem', padding: '10px 20px', whiteSpace: 'nowrap' }}>
+            {/* CTA */}
+            {!isPast && (
+              <button className="btn-primary" style={{ fontSize: '0.85rem', padding: '10px 24px' }}>
                 Register <ArrowRight size={14} />
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </Reveal>
@@ -207,10 +205,10 @@ export default function Events() {
               display: 'inline-flex',
             }}
           >
-            {['upcoming', 'past'].map(t => (
+            {['upcoming', 'past'].map((tabKey) => (
               <button
-                key={t}
-                onClick={() => setTab(t)}
+                key={tabKey}
+                onClick={() => setTab(tabKey)}
                 style={{
                   fontFamily: 'Sora',
                   fontWeight: 600,
@@ -218,15 +216,15 @@ export default function Events() {
                   padding: '10px 24px',
                   borderRadius: 10,
                   border: 'none',
-                  background: tab === t ? 'linear-gradient(135deg, #3B82F6, #6D28D9)' : 'transparent',
-                  color: tab === t ? 'white' : 'rgba(240,244,255,0.5)',
+                  background: tab === tabKey ? 'linear-gradient(135deg, #3B82F6, #6D28D9)' : 'transparent',
+                  color: tab === tabKey ? 'white' : 'rgba(240,244,255,0.5)',
                   cursor: 'pointer',
                   transition: 'all 0.3s',
                   textTransform: 'capitalize',
-                  boxShadow: tab === t ? '0 4px 20px rgba(59,130,246,0.3)' : 'none',
+                  boxShadow: tab === tabKey ? '0 4px 20px rgba(59,130,246,0.3)' : 'none',
                 }}
               >
-                {t === 'upcoming' ? <><Calendar size={14} /> {t('common.upcoming')}</> : <><Archive size={14} /> {t('common.past')}</>}
+                {tabKey === 'upcoming' ? <><Calendar size={14} /> {t('common.upcoming')}</> : <><Archive size={14} /> {t('common.past')}</>}
               </button>
             ))}
           </div>

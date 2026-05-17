@@ -2,8 +2,10 @@ import React from 'react';
 import { stats } from '../../data/index';
 import { AnimatedCounter, Reveal } from '../ui/index';
 import { TrendingUp } from 'lucide-react';
+import { useTranslation } from '../../hooks/useTranslation';
 
 export default function Stats() {
+  const { t, localeData } = useTranslation();
   return (
     <section style={{ padding: '80px 0', position: 'relative' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -29,11 +31,11 @@ export default function Stats() {
                     color: 'rgba(240,244,255,0.55)',
                     marginTop: 8,
                   }}>
-                    {stat.label}
+                    {localeData(stat, 'label')}
                   </p>
                   <div className="flex items-center justify-center gap-1 mt-2">
                     <TrendingUp size={12} style={{ color: '#4ADE80' }} />
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.7rem', color: '#4ADE80' }}>+12% YoY</span>
+                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.7rem', color: '#4ADE80' }}>{t('stats.yoy')}</span>
                   </div>
                 </div>
               </Reveal>

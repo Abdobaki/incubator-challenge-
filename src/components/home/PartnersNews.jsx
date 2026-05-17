@@ -9,6 +9,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 // PARTNERS MARQUEE
 // ═══════════════════════════════════════════════
 export function Partners() {
+  const { t } = useTranslation();
   const doubled = [...partners, ...partners]; // for seamless loop
 
   return (
@@ -22,7 +23,7 @@ export function Partners() {
           textTransform: 'uppercase',
           marginBottom: 32,
         }}>
-          Trusted by industry leaders & government institutions
+          {t('section.partners.tag')}
         </p>
       </div>
 
@@ -84,13 +85,13 @@ export function LatestNews() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-16">
           <SectionHeader
-            tag={<><Newspaper size={14} /> Latest News</>}
-            title={<>Incubator <span className="gradient-text">News & Updates</span></>}
-            subtitle="Stay informed about the latest from our ecosystem."
+            tag={<><Newspaper size={14} /> {t('section.news')}</>}
+            title={<>{t('section.news.title').split(' ').slice(0, 2).join(' ')} <span className="gradient-text">{t('section.news.title').split(' ').slice(2).join(' ')}</span></>}
+            subtitle={t('section.news.sub')}
             align="left"
           />
           <Link to="/news" className="btn-secondary flex-shrink-0" style={{ textDecoration: 'none' }}>
-            All News <ArrowRight size={16} />
+            {t('common.allNews')} <ArrowRight size={16} />
           </Link>
         </div>
 
@@ -98,25 +99,47 @@ export function LatestNews() {
           {latest.map((article, i) => (
             <Reveal key={article.id} delay={i * 120} direction="up">
               <div className="glass-card" style={{ height: '100%', cursor: 'pointer' }}>
-                {/* Thumbnail placeholder */}
+                {/* Real image thumbnail */}
                 <div
                   className="rounded-xl mb-5"
                   style={{
-                    height: 140,
-                    background: `linear-gradient(135deg, rgba(59,130,246,0.15), rgba(109,40,217,0.1))`,
-                    border: '1px solid rgba(255,255,255,0.06)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '2.5rem',
+                    height: 180,
                     overflow: 'hidden',
+                    border: '1px solid rgba(255,255,255,0.06)',
                   }}
                 >
-                  {article.category === 'Award' ? <Trophy size={24} style={{opacity: 0.5}} /> : 
-                   article.category === 'Funding' ? <DollarSign size={24} style={{opacity: 0.5}} /> :
-                   article.category === 'Program' ? <Target size={24} style={{opacity: 0.5}} /> :
-                   article.category === 'Achievement' ? <Medal size={24} style={{opacity: 0.5}} /> :
-                   article.category === 'Partnership' ? <Handshake size={24} style={{opacity: 0.5}} /> : <Megaphone size={24} style={{opacity: 0.5}} />}
+                  {article.image ? (
+                    <img
+                      src={article.image}
+                      alt={localeData(article, 'title')}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        transition: 'transform 0.4s ease',
+                      }}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.parentElement.style.background = 'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(109,40,217,0.1))';
+                        e.target.parentElement.style.display = 'flex';
+                        e.target.parentElement.style.alignItems = 'center';
+                        e.target.parentElement.style.justifyContent = 'center';
+                      }}
+                      onMouseEnter={(e) => { e.target.style.transform = 'scale(1.05)'; }}
+                      onMouseLeave={(e) => { e.target.style.transform = 'scale(1)'; }}
+                    />
+                  ) : (
+                    <div style={{
+                      width: '100%',
+                      height: '100%',
+                      background: 'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(109,40,217,0.1))',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                      <Megaphone size={24} style={{ opacity: 0.5 }} />
+                    </div>
+                  )}
                 </div>
 
                 {/* Category + date */}
@@ -176,7 +199,7 @@ export function LatestNews() {
                     }}
                     className="hover:gap-2"
                   >
-                    Read more <ArrowRight size={14} />
+                    {t('common.readMore')} <ArrowRight size={14} />
                   </Link>
                 </div>
               </div>

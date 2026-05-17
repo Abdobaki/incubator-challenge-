@@ -13,9 +13,9 @@ export default function ProgramsOverview() {
     <section style={{ padding: '100px 0', position: 'relative' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          tag={<><Target size={14} /> What We Offer</>}
-          title={<>World-Class <span className="gradient-text">Programs</span><br />for Ambitious Founders</>}
-          subtitle="From idea to global startup — our comprehensive programs cover every stage of your entrepreneurial journey with expert support and resources."
+          tag={<><Target size={14} /> {t('section.programs')}</>}
+          title={<><span className="gradient-text">{t('section.programs.title').split(' ').slice(0, 2).join(' ')}</span> {t('section.programs.title').split(' ').slice(2).join(' ')}</>}
+          subtitle={t('section.programs.sub')}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-16">
@@ -101,7 +101,7 @@ export default function ProgramsOverview() {
                       }}
                       className="hover:gap-2"
                     >
-                      Learn more <ArrowRight size={14} />
+                      {t('common.learnMore')} <ArrowRight size={14} />
                     </Link>
                   </div>
                 </div>
@@ -112,7 +112,7 @@ export default function ProgramsOverview() {
 
         <div className="text-center mt-12">
           <Link to="/programs" className="btn-secondary" style={{ textDecoration: 'none' }}>
-            View All Programs <ArrowRight size={18} />
+            {t('common.allPrograms')} <ArrowRight size={18} />
           </Link>
         </div>
       </div>

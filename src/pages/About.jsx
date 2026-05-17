@@ -55,22 +55,22 @@ export default function About() {
       <section style={{ padding: '80px 0' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {[
-              {
-                icon: Target,
-                color: '#3B82F6',
-                tag: 'Our Mission',
-                title: 'Empowering Entrepreneurs',
-                text: 'To provide a world-class incubation environment that empowers university students, graduates, and researchers to build innovative, scalable, and impactful businesses that contribute to Algeria\'s socio-economic development.',
-              },
-              {
-                icon: Eye,
-                color: '#8B5CF6',
-                tag: 'Our Vision',
-                title: 'Algeria\'s Silicon Valley',
-                text: 'To become the leading innovation hub in North Africa by 2030, having incubated 500+ startups, raised over 500M DZD in funding, and produced technology companies that compete on a global stage.',
-              },
-            ].map((item, i) => (
+              {[
+                {
+                  icon: Target,
+                  color: '#3B82F6',
+                  tag: t('about.mission.tag'),
+                  title: t('about.mission.title'),
+                  text: t('about.mission.text'),
+                },
+                {
+                  icon: Eye,
+                  color: '#8B5CF6',
+                  tag: t('about.vision.tag'),
+                  title: t('about.vision.title'),
+                  text: t('about.vision.text'),
+                },
+              ].map((item, i) => (
               <Reveal key={item.tag} delay={i * 150} direction={i === 0 ? 'left' : 'right'}>
                 <div className="glass-card" style={{ height: '100%' }}>
                   <div style={{
@@ -133,10 +133,10 @@ export default function About() {
                 </div>
                 <div style={{ position: 'relative', zIndex: 1 }}>
                   <p style={{ fontFamily: 'Sora', fontSize: '0.78rem', color: '#60A5FA', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 20 }}>
-                    Director's Message
+                    {t('about.director.tag')}
                   </p>
                   <p style={{ color: 'rgba(240,244,255,0.75)', fontSize: '1rem', lineHeight: 1.85, fontStyle: 'italic', marginBottom: 32 }}>
-                    "When we founded BIS Incubator, we had one conviction: that the seeds of Algeria's next technological revolution were already in our classrooms. Our job is simply to give those seeds the light, water, and nutrients they need to grow into world-class companies. Every startup we launch, every founder we mentor, every investment we secure — it's all in service of one dream: an Algeria that innovates, builds, and leads."
+                    {t('about.director.quote')}
                   </p>
                   <div className="flex items-center gap-4">
                     <div style={{
@@ -166,9 +166,9 @@ export default function About() {
 
             <Reveal direction="right">
               <div>
-                <div className="section-tag"><Target size={14} /> Our Objectives</div>
+                <div className="section-tag"><Target size={14} /> {t('about.objectives.tag')}</div>
                 <h2 style={{ fontFamily: 'Sora', fontWeight: 800, fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', color: '#F0F4FF', marginBottom: 32, lineHeight: 1.2 }}>
-                  What We Set Out<br />to <span className="gradient-text">Achieve</span>
+                  {t('about.objectives.title').split(' ').slice(0, 4).join(' ')}<br />{t('about.objectives.title').split(' ').slice(4).join(' ')}
                 </h2>
                 <ul className="flex flex-col gap-4">
                   {objectives.map((obj, i) => (
