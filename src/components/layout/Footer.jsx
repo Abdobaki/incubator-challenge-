@@ -65,7 +65,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-6">
               <img
-                src="/images/gallery/logo.png"
+                src={`${import.meta.env.BASE_URL}images/gallery/logo.png`}
                 alt="BIS Incubator"
                 style={{
                   width: 48, height: 48, borderRadius: 14, objectFit: 'contain',

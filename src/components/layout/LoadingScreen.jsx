@@ -48,7 +48,7 @@ export default function LoadingScreen({ onComplete }) {
           }} />
           {/* Logo mark */}
           <img
-            src="/images/gallery/logo.png"
+            src={`${import.meta.env.BASE_URL}images/gallery/logo.png`}
             alt="BIS Incubator"
             style={{
               width: 80, height: 80, borderRadius: 20, objectFit: 'contain',

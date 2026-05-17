@@ -47,7 +47,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group" style={{ textDecoration: 'none' }}>
             <img
-              src="/images/gallery/logo.png"
+              src={`${import.meta.env.BASE_URL}images/gallery/logo.png`}
               alt="BIS Incubator"
               style={{
                 width: 42, height: 42, borderRadius: 12, objectFit: 'contain',

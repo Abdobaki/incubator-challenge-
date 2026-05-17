@@ -247,7 +247,7 @@ function GalleryManager({ t }) {
                 className="group"
                 style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', cursor: 'pointer', aspectRatio: item.span?.includes('row-span-2') ? '1' : '4/3' }}
                 onClick={() => setSelected(item)}>
-                <img src={item.image} alt={item.title}
+                <img src={item.image?.startsWith("http") ? item.image : `${import.meta.env.BASE_URL}${item.image.replace(/^\//, "")}`} alt={item.title}
                   style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s' }}
                   className="group-hover:scale-105" />
                 <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)', padding: '12px 14px' }}>
@@ -269,7 +269,7 @@ function GalleryManager({ t }) {
         <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
           onClick={() => setSelected(null)}>
           <div style={{ position: 'relative', maxWidth: 800, width: '100%', borderRadius: 16, overflow: 'hidden' }}>
-            <img src={selected.image} alt={selected.title} style={{ width: '100%', maxHeight: '80vh', objectFit: 'contain' }} />
+            <img src={selected.image?.startsWith("http") ? selected.image : `${import.meta.env.BASE_URL}${selected.image.replace(/^\//, "")}`} alt={selected.title} style={{ width: '100%', maxHeight: '80vh', objectFit: 'contain' }} />
             <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)', padding: 16 }}>
               <p style={{ fontFamily: 'Sora', fontWeight: 600, color: 'white', fontSize: '1rem' }}>{selected.title}</p>
             </div>

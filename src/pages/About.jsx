@@ -277,7 +277,7 @@ export default function About() {
                     boxShadow: '0 8px 32px rgba(59,130,246,0.3)',
                     overflow: 'hidden',
                   }}>
-                    <img src="/images/gallery/Director of Business Incubator Professor BENTOUMI Sarra.jpeg" alt="Prof. BENTOUMI Sarra" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={`${import.meta.env.BASE_URL}images/gallery/Director of Business Incubator Professor BENTOUMI Sarra.jpeg`} alt="Prof. BENTOUMI Sarra" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   <div className="text-center md:text-left">
                     <p style={{ fontFamily: 'Sora', fontWeight: 700, color: '#F0F4FF', fontSize: '1rem' }}>Prof. BENTOUMI Sarra</p>

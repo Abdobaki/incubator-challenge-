@@ -43,7 +43,7 @@ export function AdminLogin() {
         {/* Logo */}
         <div className="text-center mb-10">
           <img
-            src="/images/gallery/logo.png"
+            src={`${import.meta.env.BASE_URL}images/gallery/logo.png`}
             alt="BIS Incubator"
             style={{
               width: 64, height: 64, borderRadius: 18, objectFit: 'contain',
