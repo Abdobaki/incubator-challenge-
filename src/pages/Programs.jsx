@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Rocket, Users, GraduationCap, DollarSign, Network, Globe, CheckCircle, ArrowRight, Clock, ChevronDown } from 'lucide-react';
+import { Rocket, Users, GraduationCap, DollarSign, Network, Globe, CheckCircle, ArrowRight, Clock, ChevronDown, Target, ClipboardList } from 'lucide-react';
 import { programs } from '../data/index';
 import { SectionHeader, Reveal } from '../components/ui/index';
+import { useTranslation } from '../hooks/useTranslation';
 
 const iconMap = { Rocket, Users, GraduationCap, DollarSign, Network, Globe };
 
@@ -15,6 +16,7 @@ const process = [
 ];
 
 export default function Programs() {
+  const { t, localeData } = useTranslation();
   const [activeProgram, setActiveProgram] = useState(null);
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
@@ -30,7 +32,7 @@ export default function Programs() {
         <div className="orb orb-violet" style={{ width: 500, height: 500, top: '-200px', left: '-100px', opacity: 0.1 }} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <div className="section-tag">🎯 Programs & Services</div>
+            <div className="section-tag"><Target size={14} /> Programs & Services</div>
             <h1 style={{ fontFamily: 'Sora', fontWeight: 800, fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: '#F0F4FF', lineHeight: 1.1, marginBottom: 20, maxWidth: 680 }}>
               Everything You Need to <span className="gradient-text">Build & Scale</span>
             </h1>
@@ -76,7 +78,7 @@ export default function Programs() {
                       <div style={{ flex: 1 }}>
                         <div className="flex items-start justify-between gap-3 mb-2">
                           <h3 style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '1.15rem', color: '#F0F4FF' }}>
-                            {program.title}
+                            {localeData(program, 'title')}
                           </h3>
                           <div className="flex items-center gap-2 flex-shrink-0">
                             <span className={`badge ${program.badgeColor}`} style={{ fontSize: '0.68rem' }}>{program.badge}</span>
@@ -91,7 +93,7 @@ export default function Programs() {
                           <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.72rem', color: 'rgba(240,244,255,0.35)' }}>{program.duration}</span>
                         </div>
                         <p style={{ color: 'rgba(240,244,255,0.6)', fontSize: '0.9rem', lineHeight: 1.65 }}>
-                          {program.description}
+                          {localeData(program, 'description')}
                         </p>
                       </div>
                     </div>
@@ -138,7 +140,7 @@ export default function Programs() {
       <section style={{ padding: '80px 0', background: 'rgba(255,255,255,0.01)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
-            tag="📋 How It Works"
+            tag={<><ClipboardList size={14} /> How It Works</>}
             title={<>Our <span className="gradient-text">Application Process</span></>}
             subtitle="Simple, transparent, and designed to identify the most promising founders."
           />

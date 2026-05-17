@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Facebook, Linkedin, Twitter, Instagram, ArrowRight, ExternalLink } from 'lucide-react';
+import { Mail, Phone, MapPin, Facebook, Linkedin, Twitter, Instagram, Youtube, ArrowRight, ExternalLink, Rocket } from 'lucide-react';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const footerLinks = {
   'Incubator': [
@@ -23,6 +24,7 @@ const footerLinks = {
 };
 
 export default function Footer() {
+  const { t } = useTranslation();
   return (
     <footer style={{ background: 'linear-gradient(to top, #03061A, #050B2E)', borderTop: '1px solid rgba(255,255,255,0.06)', marginTop: 80 }}>
       {/* CTA Banner */}
@@ -37,19 +39,19 @@ export default function Footer() {
           <div className="orb orb-blue" style={{ width: 300, height: 300, top: '-100px', left: '-50px', opacity: 0.2 }} />
           <div className="orb orb-violet" style={{ width: 250, height: 250, bottom: '-80px', right: '-30px', opacity: 0.2 }} />
           <div style={{ position: 'relative', zIndex: 1 }}>
-            <p className="section-tag mx-auto" style={{ display: 'inline-flex' }}>🚀 Applications Open</p>
+            <p className="section-tag mx-auto" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Rocket size={14} /> {t('footer.cta.tag')}</p>
             <h2 style={{ fontFamily: 'Sora', fontWeight: 800, fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', marginBottom: 16, color: '#F0F4FF' }}>
-              Ready to Launch Your Startup?
+              {t('footer.cta.title')}
             </h2>
             <p style={{ color: 'rgba(240,244,255,0.65)', fontSize: '1.1rem', marginBottom: 32, maxWidth: 560, margin: '0 auto 32px' }}>
-              Join Algeria's #1 university incubator and get access to mentorship, funding, workspace, and a global network.
+              {t('footer.cta.sub')}
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link to="/contact" className="btn-primary" style={{ textDecoration: 'none' }}>
-                Apply for Incubation <ArrowRight size={18} />
+                {t('footer.cta.apply')} <ArrowRight size={18} />
               </Link>
               <Link to="/programs" className="btn-secondary" style={{ textDecoration: 'none' }}>
-                Explore Programs
+                {t('footer.cta.explore')}
               </Link>
             </div>
           </div>
@@ -62,29 +64,20 @@ export default function Footer() {
           {/* Brand column */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-6">
-              <div style={{
-                width: 48,
-                height: 48,
-                borderRadius: 14,
-                background: 'linear-gradient(135deg, #3B82F6, #6D28D9)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontFamily: 'Sora',
-                fontWeight: 800,
-                fontSize: '1rem',
-                color: 'white',
-                boxShadow: '0 0 20px rgba(59,130,246,0.3)',
-              }}>
-                BIS
-              </div>
+              <img
+                src="/images/gallery/logo.png"
+                alt="BIS Incubator"
+                style={{
+                  width: 48, height: 48, borderRadius: 14, objectFit: 'contain',
+                }}
+              />
               <div>
                 <p style={{ fontFamily: 'Sora', fontWeight: 700, color: '#F0F4FF', fontSize: '1.05rem' }}>BIS Incubator</p>
                 <p style={{ fontFamily: 'JetBrains Mono', fontSize: '0.65rem', color: 'rgba(240,244,255,0.35)', letterSpacing: '0.1em' }}>UNIVERSITY OF M'SILA</p>
               </div>
             </div>
             <p style={{ color: 'rgba(240,244,255,0.55)', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: 24, maxWidth: 320 }}>
-              Algeria's premier university startup incubator, empowering the next generation of entrepreneurs to build world-class companies.
+              {t('footer.tagline')}
             </p>
             {/* Contact info */}
             <div className="flex flex-col gap-3">
@@ -139,17 +132,17 @@ export default function Footer() {
           style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
         >
           <p style={{ fontFamily: 'Outfit', fontSize: '0.85rem', color: 'rgba(240,244,255,0.35)' }}>
-            © {new Date().getFullYear()} Bureau d'Innovation & Startup — University of M'sila. All rights reserved.
+            {t('footer.copyright').replace('{year}', new Date().getFullYear())}
           </p>
 
           {/* Social links */}
           <div className="flex items-center gap-3">
-            {[
-              { icon: Facebook, href: 'https://www.facebook.com/profile.php?id=100057652890846', label: 'Facebook' },
-              { icon: Linkedin, href: '#', label: 'LinkedIn' },
-              { icon: Twitter, href: '#', label: 'Twitter' },
-              { icon: Instagram, href: '#', label: 'Instagram' },
-            ].map(({ icon: Icon, href, label }) => (
+              {[
+                { icon: Facebook, href: 'https://web.facebook.com/profile.php?id=100057652890846', label: 'Facebook' },
+                { icon: Youtube, href: 'https://youtube.com/@projectincubateur', label: 'YouTube' },
+                { icon: Linkedin, href: '#', label: 'LinkedIn' },
+                { icon: Twitter, href: '#', label: 'Twitter' },
+              ].map(({ icon: Icon, href, label }) => (
               <a
                 key={label}
                 href={href}

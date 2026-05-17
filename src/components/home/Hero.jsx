@@ -1,18 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Play, ChevronDown, Sparkles } from 'lucide-react';
-
-const TYPED_WORDS = ['Innovation', 'Startups', 'Entrepreneurs', 'the Future'];
+import { ArrowRight, Play, ChevronDown, Sparkles, Trophy, Rocket } from 'lucide-react';
+import { useTranslation } from '../../hooks/useTranslation';
 
 function Particles() {
-  const particles = Array.from({ length: 20 }, (_, i) => ({
+  const particles = useMemo(() => Array.from({ length: 20 }, (_, i) => ({
     id: i,
     left: `${Math.random() * 100}%`,
     size: Math.random() * 4 + 1,
     duration: `${Math.random() * 15 + 10}s`,
     delay: `${Math.random() * 10}s`,
     color: ['#3B82F6', '#8B5CF6', '#00D4FF', '#10B981'][Math.floor(Math.random() * 4)],
-  }));
+  })), []);
 
   return (
     <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
@@ -38,35 +37,64 @@ function Particles() {
 }
 
 export default function Hero() {
-  const [wordIndex, setWordIndex] = useState(0);
+  const { t } = useTranslation();
+  const wordsRef = useRef([
+    t('hero.typed.innovation'),
+    t('hero.typed.startups'),
+    t('hero.typed.entrepreneurs'),
+    t('hero.typed.future'),
+  ]);
+
   const [displayed, setDisplayed] = useState('');
-  const [typing, setTyping] = useState(true);
 
   useEffect(() => {
-    const word = TYPED_WORDS[wordIndex];
-    let i = typing ? 0 : word.length;
+    wordsRef.current = [
+      t('hero.typed.innovation'),
+      t('hero.typed.startups'),
+      t('hero.typed.entrepreneurs'),
+      t('hero.typed.future'),
+    ];
+  });
 
-    const interval = setInterval(() => {
-      if (typing) {
-        setDisplayed(word.slice(0, i + 1));
-        i++;
-        if (i > word.length) {
-          clearInterval(interval);
-          setTimeout(() => setTyping(false), 2200);
+  useEffect(() => {
+    let wordIdx = 0;
+    let charIdx = 0;
+    let deleting = false;
+    let cancelled = false;
+
+    const loop = () => {
+      if (cancelled) return;
+      const word = wordsRef.current[wordIdx];
+
+      if (!deleting) {
+        charIdx++;
+        setDisplayed(word.slice(0, charIdx));
+        if (charIdx >= word.length) {
+          setTimeout(() => {
+            if (cancelled) return;
+            deleting = true;
+            loop();
+          }, 2200);
+          return;
         }
+        setTimeout(loop, 80);
       } else {
-        setDisplayed(word.slice(0, i - 1));
-        i--;
-        if (i <= 0) {
-          clearInterval(interval);
-          setWordIndex((prev) => (prev + 1) % TYPED_WORDS.length);
-          setTimeout(() => setTyping(true), 400);
+        charIdx--;
+        setDisplayed(word.slice(0, charIdx));
+        if (charIdx <= 0) {
+          deleting = false;
+          wordIdx = (wordIdx + 1) % wordsRef.current.length;
+          charIdx = 0;
+          setTimeout(loop, 400);
+          return;
         }
+        setTimeout(loop, 45);
       }
-    }, typing ? 80 : 45);
+    };
 
-    return () => clearInterval(interval);
-  }, [wordIndex, typing]);
+    const t0 = setTimeout(loop, 500);
+    return () => { cancelled = true; clearTimeout(t0); };
+  }, []);
 
   return (
     <section
@@ -109,7 +137,7 @@ export default function Hero() {
               }}
             >
               <Sparkles size={12} />
-              Algeria's #1 University Incubator
+              {t('hero.tag')}
             </div>
 
             {/* Headline */}
@@ -124,9 +152,9 @@ export default function Hero() {
                 animation: 'slideUp 0.6s ease-out 0.4s both',
               }}
             >
-              We Build the Home of{' '}
+              {t('hero.headline')}{' '}
               <span
-                className="gradient-text"
+                className="gradient-text-static"
                 style={{ display: 'block' }}
               >
                 {displayed}
@@ -155,7 +183,7 @@ export default function Hero() {
                 animation: 'slideUp 0.6s ease-out 0.6s both',
               }}
             >
-              The Bureau d'Innovation & Startup at the University of M'sila is where ambitious founders transform bold ideas into thriving companies — with world-class mentorship, funding, and community.
+              {t('hero.subtitle')}
             </p>
 
             {/* CTAs */}
@@ -164,11 +192,11 @@ export default function Hero() {
               style={{ animation: 'slideUp 0.6s ease-out 0.8s both' }}
             >
               <Link to="/contact" className="btn-primary" style={{ textDecoration: 'none', fontSize: '1rem', padding: '15px 34px' }}>
-                Apply for Incubation <ArrowRight size={20} />
+                {t('hero.cta')} <ArrowRight size={20} />
               </Link>
               <Link to="/startups" className="btn-secondary" style={{ textDecoration: 'none', fontSize: '1rem' }}>
                 <Play size={18} fill="currentColor" />
-                View Our Startups
+                {t('hero.viewStartups')}
               </Link>
             </div>
 
@@ -178,9 +206,9 @@ export default function Hero() {
               style={{ animation: 'slideUp 0.6s ease-out 1s both' }}
             >
               {[
-                { value: '120+', label: 'Startups' },
-                { value: '8+', label: 'Years Active' },
-                { value: '50M+', label: 'DZD Raised' },
+                { value: '975+', label: t('hero.trust.startups') },
+                { value: '8+', label: t('hero.trust.years') },
+                { value: '50M+', label: t('hero.trust.raised') },
               ].map(({ value, label }) => (
                 <div key={label} className="flex items-center gap-3">
                   <div style={{ width: 1, height: 32, background: 'rgba(255,255,255,0.1)' }} />
@@ -217,21 +245,21 @@ export default function Hero() {
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <p style={{ fontFamily: 'JetBrains Mono', fontSize: '0.7rem', color: 'rgba(240,244,255,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                    Current Cohort
+                    {t('hero.card.cohort')}
                   </p>
                   <p style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '1.1rem', color: '#F0F4FF', marginTop: 4 }}>
                     Spring 2025
                   </p>
                 </div>
-                <div className="badge badge-green">● Live</div>
+                <div className="badge badge-green">● {t('hero.card.live')}</div>
               </div>
 
               {/* Progress bars */}
               <div className="flex flex-col gap-4 mb-6">
                 {[
-                  { label: 'Startups Incubated', value: 85, color: '#3B82F6' },
-                  { label: 'Mentors Active', value: 72, color: '#8B5CF6' },
-                  { label: 'Funding Secured', value: 60, color: '#10B981' },
+                  { label: t('hero.card.incubated'), value: 85, color: '#3B82F6' },
+                  { label: t('hero.card.mentors'), value: 72, color: '#8B5CF6' },
+                  { label: t('hero.card.funding'), value: 60, color: '#10B981' },
                 ].map(({ label, value, color }) => (
                   <div key={label}>
                     <div className="flex justify-between mb-1">
@@ -299,7 +327,7 @@ export default function Hero() {
                   </div>
                 </div>
                 <p style={{ fontFamily: 'Outfit', fontSize: '0.82rem', color: 'rgba(240,244,255,0.5)' }}>
-                  Active founders this cohort
+                  {t('hero.card.founders')}
                 </p>
               </div>
             </div>
@@ -320,10 +348,10 @@ export default function Hero() {
                 gap: 10,
               }}
             >
-              <div style={{ fontSize: '1.5rem' }}>🏆</div>
+              <Trophy size={24} />
               <div>
-                <p style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '0.85rem', color: '#F0F4FF' }}>#1 in Algeria</p>
-                <p style={{ fontFamily: 'Outfit', fontSize: '0.72rem', color: 'rgba(240,244,255,0.45)' }}>Ranked 2024</p>
+                <p style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '0.85rem', color: '#F0F4FF' }}>{t('hero.badge.ranked')}</p>
+                <p style={{ fontFamily: 'Outfit', fontSize: '0.72rem', color: 'rgba(240,244,255,0.45)' }}>{t('hero.badge.rankedSub')}</p>
               </div>
             </div>
 
@@ -342,10 +370,10 @@ export default function Hero() {
                 gap: 10,
               }}
             >
-              <div style={{ fontSize: '1.5rem' }}>🚀</div>
+              <Rocket size={24} />
               <div>
-                <p style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '0.85rem', color: '#F0F4FF' }}>50M+ DZD Raised</p>
-                <p style={{ fontFamily: 'Outfit', fontSize: '0.72rem', color: 'rgba(240,244,255,0.45)' }}>By portfolio startups</p>
+                <p style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '0.85rem', color: '#F0F4FF' }}>{t('hero.badge.raised')}</p>
+                <p style={{ fontFamily: 'Outfit', fontSize: '0.72rem', color: 'rgba(240,244,255,0.45)' }}>{t('hero.badge.raisedSub')}</p>
               </div>
             </div>
           </div>
@@ -367,7 +395,7 @@ export default function Hero() {
         }}
       >
         <p style={{ fontFamily: 'JetBrains Mono', fontSize: '0.65rem', color: 'rgba(240,244,255,0.25)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-          Scroll
+          {t('hero.scroll')}
         </p>
         <ChevronDown
           size={18}

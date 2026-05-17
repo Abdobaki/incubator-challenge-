@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, MapPin, Clock, Users, ArrowRight, Tag } from 'lucide-react';
+import { Calendar, MapPin, Clock, Users, ArrowRight, Tag, Rocket, Zap, Trophy, Handshake, Globe, MailX, Archive } from 'lucide-react';
 import { events } from '../data/index';
 import { SectionHeader, Reveal } from '../components/ui/index';
+import { useTranslation } from '../hooks/useTranslation';
 
 const typeColors = {
   'Demo Day': 'badge-blue',
@@ -11,21 +12,20 @@ const typeColors = {
   'Summit': 'badge-red',
 };
 
-const typeEmojis = {
-  'Demo Day': '🚀',
-  'Bootcamp': '⚡',
-  'Competition': '🏆',
-  'Forum': '🤝',
-  'Summit': '🌐',
-};
+function TypeIcon({ type }) {
+  const icons = { 'Demo Day': Rocket, 'Bootcamp': Zap, 'Competition': Trophy, 'Forum': Handshake, 'Summit': Globe };
+  const Icon = icons[type];
+  return <Icon size={14} style={{ marginRight: 4 }} />;
+}
 
-function EventCard({ event, i }) {
+function EventCard({ event, i, localeData, lang = 'en' }) {
   const isPast = event.status === 'past';
   const pct = Math.round((event.registered / event.capacity) * 100);
 
   const formatDate = (d) => {
     const dt = new Date(d);
-    return dt.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const loc = lang === 'ar' ? 'ar-DZ' : lang === 'fr' ? 'fr-FR' : 'en-US';
+    return dt.toLocaleDateString(loc, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   };
 
   return (
@@ -72,14 +72,14 @@ function EventCard({ event, i }) {
               {new Date(event.date).getDate()}
             </p>
             <p style={{ fontFamily: 'Outfit', fontSize: '0.72rem', color: 'rgba(240,244,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-              {new Date(event.date).toLocaleString('en-US', { month: 'short' })}
+              {new Date(event.date).toLocaleString(lang === 'ar' ? 'ar-DZ' : lang === 'fr' ? 'fr-FR' : 'en-US', { month: 'short' })}
             </p>
           </div>
 
           <div style={{ flex: 1 }}>
             <div className="flex flex-wrap items-center gap-2 mb-2">
               <span className={`badge ${typeColors[event.type] || 'badge-blue'}`} style={{ fontSize: '0.68rem' }}>
-                {typeEmojis[event.type]} {event.type}
+                <TypeIcon type={event.type} /> {event.type}
               </span>
               {isPast && (
                 <span className="badge" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(240,244,255,0.35)', fontSize: '0.66rem' }}>
@@ -89,7 +89,7 @@ function EventCard({ event, i }) {
             </div>
 
             <h3 style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '1.05rem', color: '#F0F4FF', marginBottom: 8 }}>
-              {event.title}
+              {localeData(event, 'title')}
             </h3>
 
             <p style={{ color: 'rgba(240,244,255,0.55)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: 14 }}>
@@ -136,7 +136,7 @@ function EventCard({ event, i }) {
             )}
 
             {/* Tags */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 mb-4">
               {event.tags.map(tag => (
                 <span key={tag} style={{
                   fontFamily: 'JetBrains Mono',
@@ -151,16 +151,14 @@ function EventCard({ event, i }) {
                 </span>
               ))}
             </div>
-          </div>
 
-          {/* CTA */}
-          {!isPast && (
-            <div className="flex-shrink-0 hidden sm:block">
-              <button className="btn-primary" style={{ fontSize: '0.85rem', padding: '10px 20px', whiteSpace: 'nowrap' }}>
+            {/* CTA */}
+            {!isPast && (
+              <button className="btn-primary" style={{ fontSize: '0.85rem', padding: '10px 24px' }}>
                 Register <ArrowRight size={14} />
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </Reveal>
@@ -168,6 +166,7 @@ function EventCard({ event, i }) {
 }
 
 export default function Events() {
+  const { t, localeData, lang } = useTranslation();
   const [tab, setTab] = useState('upcoming');
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
@@ -183,7 +182,7 @@ export default function Events() {
         <div className="orb orb-blue" style={{ width: 400, height: 400, top: '-150px', right: '-80px', opacity: 0.08 }} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <div className="section-tag">📅 Events</div>
+            <div className="section-tag"><Calendar size={14} /> Events</div>
             <h1 style={{ fontFamily: 'Sora', fontWeight: 800, fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: '#F0F4FF', lineHeight: 1.1, marginBottom: 20, maxWidth: 680 }}>
               Where Founders <span className="gradient-text">Connect & Grow</span>
             </h1>
@@ -206,10 +205,10 @@ export default function Events() {
               display: 'inline-flex',
             }}
           >
-            {['upcoming', 'past'].map(t => (
+            {['upcoming', 'past'].map((tabKey) => (
               <button
-                key={t}
-                onClick={() => setTab(t)}
+                key={tabKey}
+                onClick={() => setTab(tabKey)}
                 style={{
                   fontFamily: 'Sora',
                   fontWeight: 600,
@@ -217,15 +216,15 @@ export default function Events() {
                   padding: '10px 24px',
                   borderRadius: 10,
                   border: 'none',
-                  background: tab === t ? 'linear-gradient(135deg, #3B82F6, #6D28D9)' : 'transparent',
-                  color: tab === t ? 'white' : 'rgba(240,244,255,0.5)',
+                  background: tab === tabKey ? 'linear-gradient(135deg, #3B82F6, #6D28D9)' : 'transparent',
+                  color: tab === tabKey ? 'white' : 'rgba(240,244,255,0.5)',
                   cursor: 'pointer',
                   transition: 'all 0.3s',
                   textTransform: 'capitalize',
-                  boxShadow: tab === t ? '0 4px 20px rgba(59,130,246,0.3)' : 'none',
+                  boxShadow: tab === tabKey ? '0 4px 20px rgba(59,130,246,0.3)' : 'none',
                 }}
               >
-                {t === 'upcoming' ? '📅 Upcoming' : '🗂️ Past Events'}
+                {tabKey === 'upcoming' ? <><Calendar size={14} /> {t('common.upcoming')}</> : <><Archive size={14} /> {t('common.past')}</>}
               </button>
             ))}
           </div>
@@ -233,14 +232,14 @@ export default function Events() {
           <div className="flex flex-col gap-6">
             {filtered.length === 0 ? (
               <div className="text-center py-16">
-                <p style={{ fontSize: '3rem', marginBottom: 16 }}>📭</p>
+                <div style={{ marginBottom: 16 }}><MailX size={48} style={{ color: 'rgba(240,244,255,0.3)' }} /></div>
                 <p style={{ fontFamily: 'Sora', fontWeight: 600, color: 'rgba(240,244,255,0.4)', fontSize: '1.1rem' }}>
                   No {tab} events found
                 </p>
               </div>
             ) : (
               filtered.map((event, i) => (
-                <EventCard key={event.id} event={event} i={i} />
+                <EventCard key={event.id} event={event} i={i} localeData={localeData} lang={lang} />
               ))
             )}
           </div>

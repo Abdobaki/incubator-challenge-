@@ -1,13 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Star, ExternalLink, Users } from 'lucide-react';
+import { ArrowRight, Star, ExternalLink, Users, Sprout, MessageSquare, Medal } from 'lucide-react';
 import { startups, testimonials } from '../../data/index';
 import { SectionHeader, Reveal } from '../ui/index';
+import { useTranslation } from '../../hooks/useTranslation';
 
 // ═══════════════════════════════════════════════
 // STARTUPS PREVIEW
 // ═══════════════════════════════════════════════
 export function StartupsPreview() {
+  const { t } = useTranslation();
   const featured = startups.slice(0, 3);
 
   return (
@@ -15,13 +17,13 @@ export function StartupsPreview() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-16">
           <SectionHeader
-            tag="🌱 Portfolio"
-            title={<>Our <span className="gradient-text">Success Stories</span></>}
-            subtitle="Meet the innovative startups that have graduated from BIS Incubator and are changing Algeria."
+            tag={<><Sprout size={14} /> {t('section.startups')}</>}
+            title={<>{t('section.startups.title').split(' ').slice(0, 2).join(' ')} <span className="gradient-text">{t('section.startups.title').split(' ').slice(2).join(' ')}</span></>}
+            subtitle={t('section.startups.sub')}
             align="left"
           />
           <Link to="/startups" className="btn-secondary flex-shrink-0" style={{ textDecoration: 'none' }}>
-            All Startups <ArrowRight size={16} />
+            {t('common.allStartups')} <ArrowRight size={16} />
           </Link>
         </div>
 
@@ -82,7 +84,7 @@ export function StartupsPreview() {
                       padding: '2px 8px',
                       borderRadius: 6,
                     }}>
-                      🏅 {a}
+                      <Medal size={12} style={{marginRight: 4}} /> {a}
                     </span>
                   ))}
                 </div>
@@ -117,14 +119,15 @@ export function StartupsPreview() {
 // TESTIMONIALS
 // ═══════════════════════════════════════════════
 export function Testimonials() {
+  const { t } = useTranslation();
   return (
     <section style={{ padding: '100px 0', position: 'relative' }}>
       <div className="orb orb-violet" style={{ width: 400, height: 400, top: '20%', right: '-100px', opacity: 0.1 }} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          tag="💬 Founder Stories"
-          title={<>What Our <span className="gradient-text">Founders Say</span></>}
-          subtitle="Real stories from real entrepreneurs who built their startups at BIS Incubator."
+          tag={<><MessageSquare size={14} /> {t('section.testimonials')}</>}
+          title={<>{t('section.testimonials.title').split(' ').slice(0, 2).join(' ')} <span className="gradient-text">{t('section.testimonials.title').split(' ').slice(2).join(' ')}</span></>}
+          subtitle={t('section.testimonials.sub')}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">

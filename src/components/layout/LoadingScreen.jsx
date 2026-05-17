@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from '../../hooks/useTranslation';
 
 export default function LoadingScreen({ onComplete }) {
+  const { t } = useTranslation();
   const [progress, setProgress] = useState(0);
   const [fadeOut, setFadeOut] = useState(false);
 
@@ -45,24 +47,15 @@ export default function LoadingScreen({ onComplete }) {
             animation: 'pulseGlow 2s ease-in-out infinite',
           }} />
           {/* Logo mark */}
-          <div style={{
-            width: 80,
-            height: 80,
-            borderRadius: 20,
-            background: 'linear-gradient(135deg, #3B82F6 0%, #6D28D9 100%)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '2rem',
-            fontFamily: 'Sora, sans-serif',
-            fontWeight: 800,
-            color: 'white',
-            position: 'relative',
-            zIndex: 1,
-            boxShadow: '0 0 40px rgba(59,130,246,0.5)',
-          }}>
-            BIS
-          </div>
+          <img
+            src="/images/gallery/logo.png"
+            alt="BIS Incubator"
+            style={{
+              width: 80, height: 80, borderRadius: 20, objectFit: 'contain',
+              position: 'relative', zIndex: 1,
+              boxShadow: '0 0 40px rgba(59,130,246,0.5)',
+            }}
+          />
         </div>
 
         <div className="text-center">

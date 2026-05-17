@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ExternalLink, Users, Calendar, Search, Filter } from 'lucide-react';
+import { ExternalLink, Users, Calendar, Search, Filter, Sprout, Medal } from 'lucide-react';
 import { startups } from '../data/index';
 import { SectionHeader, Reveal } from '../components/ui/index';
 
@@ -28,7 +28,7 @@ export default function Startups() {
         <div className="orb orb-cyan" style={{ width: 500, height: 500, top: '-200px', right: '-100px', opacity: 0.08 }} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <div className="section-tag">🌱 Startup Portfolio</div>
+            <div className="section-tag"><Sprout size={14} /> Startup Portfolio</div>
             <h1 style={{ fontFamily: 'Sora', fontWeight: 800, fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: '#F0F4FF', lineHeight: 1.1, marginBottom: 20, maxWidth: 680 }}>
               Meet the <span className="gradient-text">Innovators</span> We've Built
             </h1>
@@ -87,7 +87,7 @@ export default function Startups() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {filtered.length === 0 ? (
             <div className="text-center py-20">
-              <p style={{ fontSize: '3rem', marginBottom: 16 }}>🔍</p>
+              <div style={{ marginBottom: 16 }}><Search size={48} style={{ color: 'rgba(240,244,255,0.3)' }} /></div>
               <p style={{ fontFamily: 'Sora', fontWeight: 600, color: 'rgba(240,244,255,0.5)', fontSize: '1.1rem' }}>No startups found</p>
             </div>
           ) : (
@@ -161,7 +161,7 @@ export default function Startups() {
                           padding: '2px 8px',
                           borderRadius: 6,
                         }}>
-                          🏅 {a}
+                          <Medal size={12} style={{marginRight: 4}} /> {a}
                         </span>
                       ))}
                     </div>
