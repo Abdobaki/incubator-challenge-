@@ -110,7 +110,7 @@ export function LatestNews() {
                 >
                   {article.image ? (
                     <img
-                      src={article.image?.startsWith("http") ? article.image : `${import.meta.env.BASE_URL}${article.image.replace(/^\//, "")}`}
+                      src={article.image}
                       alt={localeData(article, 'title')}
                       style={{
                         width: '100%',

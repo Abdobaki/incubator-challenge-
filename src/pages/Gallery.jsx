@@ -92,7 +92,7 @@ export default function Gallery() {
                 onClick={() => setLightbox(item)}
               >
                 <img
-                  src={item.image?.startsWith("http") ? item.image : `${import.meta.env.BASE_URL}${item.image.replace(/^\//, "")}`}
+                  src={item.image}
                   alt={item.title}
                   style={{
                     width: '100%',
@@ -168,7 +168,7 @@ export default function Gallery() {
             </button>
 
             <img
-              src={lightbox.image?.startsWith("http") ? lightbox.image : `${import.meta.env.BASE_URL}${lightbox.image.replace(/^\//, "")}`}
+              src={lightbox.image}
               alt={lightbox.title}
               style={{
                 width: '100%',
