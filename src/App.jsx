@@ -74,7 +74,7 @@ function AppContent() {
 export default function App() {
   return (
     <LanguageProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/incubator-challenge-/">
         <ScrollToTop />
         <AppContent />
       </BrowserRouter>
