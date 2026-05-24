@@ -370,29 +370,29 @@ function NotificationsDropdown({ t, onClose }) {
   };
 
   return (
-    <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 8, width: 340, borderRadius: 14, background: '#0B0E28', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 20px 60px rgba(0,0,0,0.5)', overflow: 'hidden', zIndex: 100 }}>
-      <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <span style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '0.88rem', color: '#F0F4FF' }}>
+    <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 8, width: 340, borderRadius: 14, background: 'var(--navy-900)', border: '1px solid var(--glass-border)', boxShadow: '0 20px 60px rgba(0,0,0,0.35)', overflow: 'hidden', zIndex: 100 }}>
+      <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid var(--glass-border)' }}>
+        <span style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '0.88rem', color: 'var(--text-primary)' }}>
           <Bell size={14} style={{ marginRight: 6 }} /> Notifications
         </span>
-        <button onClick={markAllRead} style={{ fontFamily: 'Outfit', fontSize: '0.72rem', color: '#60A5FA', background: 'none', border: 'none', cursor: 'pointer' }}>
+        <button onClick={markAllRead} style={{ fontFamily: 'Outfit', fontSize: '0.72rem', color: 'var(--electric)', background: 'none', border: 'none', cursor: 'pointer' }}>
           {t('admin.notifications.markRead')}
         </button>
       </div>
       <div style={{ maxHeight: 340, overflowY: 'auto' }}>
         {notes.length === 0 ? (
           <div className="text-center py-10">
-            <p style={{ fontFamily: 'Outfit', fontSize: '0.85rem', color: 'rgba(240,244,255,0.3)' }}>{t('admin.notifications.empty')}</p>
+            <p style={{ fontFamily: 'Outfit', fontSize: '0.85rem', color: 'var(--text-muted)' }}>{t('admin.notifications.empty')}</p>
           </div>
         ) : notes.map((n) => (
-          <div key={n.id} style={{ display: 'flex', gap: 12, padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.03)', background: n.read ? 'transparent' : 'rgba(59,130,246,0.05)', cursor: 'pointer' }}>
+          <div key={n.id} style={{ display: 'flex', gap: 12, padding: '12px 16px', borderBottom: '1px solid var(--glass-border)', background: n.read ? 'transparent' : 'rgba(59,130,246,0.07)', cursor: 'pointer' }}>
             <div style={{ width: 32, height: 32, borderRadius: 8, background: `${n.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <Bell size={13} style={{ color: n.color }} />
             </div>
             <div style={{ flex: 1 }}>
-              <p style={{ fontFamily: 'Outfit', fontSize: '0.82rem', color: '#F0F4FF', fontWeight: n.read ? 400 : 600 }}>{n.title}</p>
-              <p style={{ fontFamily: 'Outfit', fontSize: '0.72rem', color: 'rgba(240,244,255,0.4)', marginTop: 2 }}>{n.detail}</p>
-              <p style={{ fontFamily: 'JetBrains Mono', fontSize: '0.62rem', color: 'rgba(240,244,255,0.25)', marginTop: 4 }}>
+              <p style={{ fontFamily: 'Outfit', fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: n.read ? 400 : 600 }}>{n.title}</p>
+              <p style={{ fontFamily: 'Outfit', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 2 }}>{n.detail}</p>
+              <p style={{ fontFamily: 'JetBrains Mono', fontSize: '0.62rem', color: 'var(--text-muted)', marginTop: 4 }}>
                 <Clock size={10} style={{ marginRight: 4 }} />{n.time}
               </p>
             </div>
@@ -406,10 +406,10 @@ function NotificationsDropdown({ t, onClose }) {
 
 function ProfileDropdown({ t, onClose, navigate }) {
   return (
-    <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 8, width: 220, borderRadius: 14, background: '#0B0E28', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 20px 60px rgba(0,0,0,0.5)', overflow: 'hidden', zIndex: 100 }}>
-      <div className="px-4 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <p style={{ fontFamily: 'Sora', fontWeight: 600, fontSize: '0.88rem', color: '#F0F4FF' }}>{t('admin.profile.name')}</p>
-        <p style={{ fontFamily: 'JetBrains Mono', fontSize: '0.68rem', color: 'rgba(240,244,255,0.35)', marginTop: 2 }}>{t('admin.profile.email')}</p>
+    <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 8, width: 220, borderRadius: 14, background: 'var(--navy-900)', border: '1px solid var(--glass-border)', boxShadow: '0 20px 60px rgba(0,0,0,0.35)', overflow: 'hidden', zIndex: 100 }}>
+      <div className="px-4 py-4" style={{ borderBottom: '1px solid var(--glass-border)' }}>
+        <p style={{ fontFamily: 'Sora', fontWeight: 600, fontSize: '0.88rem', color: 'var(--text-primary)' }}>{t('admin.profile.name')}</p>
+        <p style={{ fontFamily: 'JetBrains Mono', fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: 2 }}>{t('admin.profile.email')}</p>
       </div>
       <div style={{ padding: 4 }}>
         {[
@@ -418,8 +418,8 @@ function ProfileDropdown({ t, onClose, navigate }) {
           { icon: LogIn, label: 'admin.sidebar.signOut' },
         ].map(({ icon: Icon, label }) => (
           <button key={label} onClick={() => { if (label === 'admin.sidebar.signOut') navigate('/admin'); onClose(); }}
-            style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 8, border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', background: 'transparent', color: 'rgba(240,244,255,0.6)', fontFamily: 'Outfit', fontWeight: 500, fontSize: '0.85rem', transition: 'all 0.15s' }}
-            onMouseOver={e => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
+            style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 8, border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', background: 'transparent', color: 'var(--text-secondary)', fontFamily: 'Outfit', fontWeight: 500, fontSize: '0.85rem', transition: 'all 0.15s' }}
+            onMouseOver={e => e.currentTarget.style.background = 'var(--glass-bg)'}
             onMouseOut={e => e.currentTarget.style.background = 'transparent'}>
             <Icon size={15} /> {t(label)}
           </button>
@@ -449,7 +449,7 @@ function LanguageSwitcher() {
         {lang.toUpperCase()}
       </button>
       {open && (
-        <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 4, background: '#0B0E28', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, overflow: 'hidden', zIndex: 100, minWidth: 120 }}>
+        <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 4, background: '#131929', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, overflow: 'hidden', zIndex: 100, minWidth: 120 }}>
           {options.map(l => (
             <button key={l.code} onClick={() => { switchLang(l.code); setOpen(false); }}
               style={{ display: 'block', width: '100%', padding: '8px 14px', border: 'none', cursor: 'pointer', textAlign: 'left', background: 'transparent', color: 'rgba(240,244,255,0.6)', fontFamily: 'Outfit', fontSize: '0.82rem', transition: 'all 0.15s' }}
@@ -494,23 +494,23 @@ export function AdminDashboard() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#03061A' }}>
-      {/* Sidebar */}
-      <aside className="admin-sidebar" style={{ width: 240, flexShrink: 0, padding: '24px 0', display: 'flex', flexDirection: 'column', position: 'sticky', top: 0, height: '100vh' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--navy-950)' }}>
+      {/* Sidebar — fixed so it doesn't scroll with the page */}
+      <aside className="admin-sidebar" style={{ width: 240, flexShrink: 0, padding: '24px 0', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, height: '100vh', zIndex: 50, overflowY: 'auto' }}>
         <div className="flex items-center gap-3 px-6 mb-8">
-          <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #3B82F6, #6D28D9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Sora', fontWeight: 800, fontSize: '0.8rem', color: 'white' }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #3B82F6, #6D28D9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Sora', fontWeight: 800, fontSize: '0.8rem', color: 'white', flexShrink: 0 }}>
             BIS
           </div>
           <div>
-            <p style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '0.9rem', color: '#F0F4FF' }}>Admin Panel</p>
-            <p style={{ fontFamily: 'JetBrains Mono', fontSize: '0.6rem', color: 'rgba(240,244,255,0.3)' }}>v1.0.0</p>
+            <p style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Admin Panel</p>
+            <p style={{ fontFamily: 'JetBrains Mono', fontSize: '0.6rem', color: 'var(--text-muted)' }}>v1.0.0</p>
           </div>
         </div>
 
         <nav style={{ flex: 1, padding: '0 12px', display: 'flex', flexDirection: 'column', gap: 2 }}>
           {navItems.map(({ icon: Icon, labelKey, key }) => (
             <button key={key} onClick={() => setActiveSection(key)}
-              style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 10, border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', background: activeSection === key ? 'rgba(59,130,246,0.15)' : 'transparent', color: activeSection === key ? '#60A5FA' : 'rgba(240,244,255,0.5)', fontFamily: 'Outfit', fontWeight: 500, fontSize: '0.9rem', transition: 'all 0.2s', borderLeft: activeSection === key ? '3px solid #3B82F6' : '3px solid transparent' }}>
+              style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 10, border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', background: activeSection === key ? 'rgba(59,130,246,0.15)' : 'transparent', color: activeSection === key ? 'var(--electric)' : 'var(--text-secondary)', fontFamily: 'Outfit', fontWeight: 500, fontSize: '0.9rem', transition: 'all 0.2s', borderLeft: activeSection === key ? '3px solid var(--electric)' : '3px solid transparent' }}>
               <Icon size={17} />
               {t(labelKey)}
             </button>
@@ -519,15 +519,15 @@ export function AdminDashboard() {
 
         <div style={{ padding: '0 12px' }}>
           <button onClick={() => navigate('/admin')}
-            style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 10, border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', background: 'transparent', color: 'rgba(240,244,255,0.35)', fontFamily: 'Outfit', fontWeight: 500, fontSize: '0.9rem', transition: 'all 0.2s' }}>
+            style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 10, border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', background: 'transparent', color: 'var(--text-muted)', fontFamily: 'Outfit', fontWeight: 500, fontSize: '0.9rem', transition: 'all 0.2s' }}>
             <LogOut size={17} />
             {t('admin.sidebar.signOut')}
           </button>
         </div>
       </aside>
 
-      {/* Main content */}
-      <main style={{ flex: 1, padding: 32, overflowY: 'auto' }}>
+      {/* Main content — offset by sidebar width */}
+      <main style={{ flex: 1, padding: 32, overflowY: 'auto', marginLeft: 240 }}>
         <div className="flex items-center justify-between mb-8">
           <div />
           <div className="flex items-center gap-3">
@@ -535,7 +535,7 @@ export function AdminDashboard() {
 
             <div ref={notifRef} style={{ position: 'relative' }}>
               <button onClick={() => { setNotifOpen(!notifOpen); setProfileOpen(false); }}
-                style={{ width: 38, height: 38, borderRadius: 10, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'rgba(240,244,255,0.5)', position: 'relative' }}>
+                style={{ width: 38, height: 38, borderRadius: 10, background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-secondary)', position: 'relative' }}>
                 <Bell size={16} />
                 <span style={{ position: 'absolute', top: 6, right: 6, width: 7, height: 7, borderRadius: '50%', background: '#EF4444' }} />
               </button>

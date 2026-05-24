@@ -224,9 +224,9 @@ export default function Contact() {
                           onChange={e => setForm({ ...form, reason: e.target.value })}
                           style={{ cursor: 'pointer' }}
                         >
-                          <option value="" disabled style={{ background: '#0A1245' }}>Select a reason...</option>
+                          <option value="" disabled style={{ background: '#1A2240' }}>Select a reason...</option>
                           {reasons.map(r => (
-                            <option key={r} value={r} style={{ background: '#0A1245' }}>{r}</option>
+                            <option key={r} value={r} style={{ background: '#1A2240' }}>{r}</option>
                           ))}
                         </select>
                       </div>

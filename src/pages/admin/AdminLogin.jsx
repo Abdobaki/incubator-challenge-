@@ -28,7 +28,7 @@ export function AdminLogin() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#03061A',
+      background: '#0D1225',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',

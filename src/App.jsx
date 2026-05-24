@@ -4,6 +4,7 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import LoadingScreen from './components/layout/LoadingScreen';
 import { LanguageProvider } from './context/LanguageContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 // Pages
 import Home from './pages/Home';
@@ -73,11 +74,13 @@ function AppContent() {
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <BrowserRouter basename="/incubator-challenge-/">
-        <ScrollToTop />
-        <AppContent />
-      </BrowserRouter>
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <BrowserRouter basename="/incubator-challenge-/">
+          <ScrollToTop />
+          <AppContent />
+        </BrowserRouter>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }

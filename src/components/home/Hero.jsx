@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Play, ChevronDown, Sparkles, Trophy, Rocket } from 'lucide-react';
+import { ArrowRight, Play, ChevronDown, Sparkles, Newspaper, Clock, ExternalLink } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
+import { newsArticles } from '../../data/index';
 
 function Particles() {
   const particles = useMemo(() => Array.from({ length: 20 }, (_, i) => ({
@@ -221,7 +222,7 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right: Visual card stack */}
+          {/* Right: Mini News Feed */}
           <div
             style={{
               position: 'relative',
@@ -230,155 +231,130 @@ export default function Hero() {
               animation: 'fadeIn 0.8s ease-out 0.6s both',
             }}
           >
-            {/* Main card */}
             <div
-              className="glass-card animate-float"
+              className="glass-card"
               style={{
                 width: '100%',
-                maxWidth: 420,
-                padding: 32,
-                position: 'relative',
-                zIndex: 2,
+                maxWidth: 440,
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
               }}
             >
-              {/* Card header */}
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <p style={{ fontFamily: 'JetBrains Mono', fontSize: '0.7rem', color: 'rgba(240,244,255,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                    {t('hero.card.cohort')}
-                  </p>
-                  <p style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '1.1rem', color: '#F0F4FF', marginTop: 4 }}>
-                    Spring 2025
-                  </p>
-                </div>
-                <div className="badge badge-green">● {t('hero.card.live')}</div>
-              </div>
-
-              {/* Progress bars */}
-              <div className="flex flex-col gap-4 mb-6">
-                {[
-                  { label: t('hero.card.incubated'), value: 85, color: '#3B82F6' },
-                  { label: t('hero.card.mentors'), value: 72, color: '#8B5CF6' },
-                  { label: t('hero.card.funding'), value: 60, color: '#10B981' },
-                ].map(({ label, value, color }) => (
-                  <div key={label}>
-                    <div className="flex justify-between mb-1">
-                      <span style={{ fontFamily: 'Outfit', fontSize: '0.82rem', color: 'rgba(240,244,255,0.6)' }}>{label}</span>
-                      <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.78rem', color, fontWeight: 600 }}>{value}%</span>
-                    </div>
-                    <div style={{ height: 6, background: 'rgba(255,255,255,0.06)', borderRadius: 3, overflow: 'hidden' }}>
-                      <div style={{
-                        height: '100%',
-                        width: `${value}%`,
-                        background: `linear-gradient(90deg, ${color}, ${color}AA)`,
-                        borderRadius: 3,
-                        boxShadow: `0 0 10px ${color}80`,
-                        animation: 'loadingProgress 2s ease-out',
-                      }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Startup avatars */}
-              <div className="flex items-center gap-3">
-                <div className="flex" style={{ marginLeft: 0 }}>
-                  {['AK', 'BY', 'CL', 'DM', 'EN'].map((initials, i) => (
-                    <div
-                      key={initials}
-                      style={{
-                        width: 32,
-                        height: 32,
-                        borderRadius: '50%',
-                        background: `hsl(${i * 55 + 200}, 70%, 50%)`,
-                        border: '2px solid rgba(10,18,69,0.8)',
-                        marginLeft: i > 0 ? -8 : 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontFamily: 'Sora',
-                        fontWeight: 700,
-                        fontSize: '0.6rem',
-                        color: 'white',
-                        zIndex: 5 - i,
-                        position: 'relative',
-                      }}
-                    >
-                      {initials}
-                    </div>
-                  ))}
+              {/* Panel header */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '18px 22px 14px',
+                borderBottom: '1px solid rgba(255,255,255,0.07)',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <div style={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: '50%',
-                    background: 'rgba(79,70,229,0.3)',
-                    border: '2px solid rgba(79,70,229,0.5)',
-                    marginLeft: -8,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontFamily: 'JetBrains Mono',
-                    fontSize: '0.6rem',
-                    color: '#A78BFA',
-                    zIndex: 0,
-                    position: 'relative',
+                    width: 28, height: 28, borderRadius: 8,
+                    background: 'rgba(59,130,246,0.15)',
+                    border: '1px solid rgba(59,130,246,0.25)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
-                    +15
+                    <Newspaper size={14} style={{ color: '#60A5FA' }} />
                   </div>
+                  <span style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '0.88rem', color: 'var(--text-primary)' }}>
+                    Latest Updates
+                  </span>
                 </div>
-                <p style={{ fontFamily: 'Outfit', fontSize: '0.82rem', color: 'rgba(240,244,255,0.5)' }}>
-                  {t('hero.card.founders')}
-                </p>
+                <span className="badge badge-green" style={{ fontSize: '0.62rem' }}>● Live</span>
               </div>
-            </div>
 
-            {/* Floating badge cards */}
-            <div
-              className="glass animate-float-delayed"
-              style={{
-                position: 'absolute',
-                top: -20,
-                right: -20,
-                padding: '12px 16px',
-                borderRadius: 14,
-                border: '1px solid rgba(255,255,255,0.1)',
-                zIndex: 3,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 10,
-              }}
-            >
-              <Trophy size={24} />
-              <div>
-                <p style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '0.85rem', color: '#F0F4FF' }}>{t('hero.badge.ranked')}</p>
-                <p style={{ fontFamily: 'Outfit', fontSize: '0.72rem', color: 'rgba(240,244,255,0.45)' }}>{t('hero.badge.rankedSub')}</p>
+              {/* News items */}
+              <div style={{ display: 'flex', flexDirection: 'column', padding: '8px 0' }}>
+                {[...newsArticles]
+                  .sort((a, b) => new Date(b.date) - new Date(a.date))
+                  .slice(0, 3)
+                  .map((article, i) => (
+                    <Link
+                      key={article.id}
+                      to="/news"
+                      style={{
+                        display: 'flex',
+                        gap: 14,
+                        padding: '14px 22px',
+                        textDecoration: 'none',
+                        borderBottom: i < 2 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+                        transition: 'background 0.2s',
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    >
+                      {/* Thumbnail */}
+                      <div style={{
+                        width: 64, height: 64, borderRadius: 10, overflow: 'hidden',
+                        flexShrink: 0, background: 'rgba(255,255,255,0.05)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                      }}>
+                        <img
+                          src={article.image}
+                          alt={article.title}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          onError={e => { e.target.style.display = 'none'; }}
+                        />
+                      </div>
+
+                      {/* Content */}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 5 }}>
+                          <span className={`badge ${article.categoryColor}`} style={{ fontSize: '0.6rem', padding: '2px 7px' }}>
+                            {article.category}
+                          </span>
+                        </div>
+                        <p style={{
+                          fontFamily: 'Outfit', fontWeight: 600, fontSize: '0.82rem',
+                          color: 'var(--text-primary)',
+                          lineHeight: 1.35,
+                          marginBottom: 6,
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                        }}>
+                          {article.title}
+                        </p>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                          <Clock size={10} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
+                          <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.62rem', color: 'var(--text-muted)' }}>
+                            {new Date(article.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
               </div>
-            </div>
 
-            <div
-              className="glass animate-float-slow"
-              style={{
-                position: 'absolute',
-                bottom: 20,
-                left: -30,
-                padding: '12px 16px',
-                borderRadius: 14,
-                border: '1px solid rgba(255,255,255,0.1)',
-                zIndex: 3,
+              {/* Footer */}
+              <div style={{
+                padding: '12px 22px',
+                borderTop: '1px solid rgba(255,255,255,0.07)',
                 display: 'flex',
-                alignItems: 'center',
-                gap: 10,
-              }}
-            >
-              <Rocket size={24} />
-              <div>
-                <p style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '0.85rem', color: '#F0F4FF' }}>{t('hero.badge.raised')}</p>
-                <p style={{ fontFamily: 'Outfit', fontSize: '0.72rem', color: 'rgba(240,244,255,0.45)' }}>{t('hero.badge.raisedSub')}</p>
+                justifyContent: 'center',
+              }}>
+                <Link
+                  to="/news"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    fontFamily: 'Outfit', fontWeight: 600, fontSize: '0.8rem',
+                    color: '#60A5FA', textDecoration: 'none',
+                    transition: 'gap 0.2s',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.gap = '10px'}
+                  onMouseLeave={e => e.currentTarget.style.gap = '6px'}
+                >
+                  View all news <ArrowRight size={14} />
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </div>
+
 
       {/* Scroll indicator */}
       <div

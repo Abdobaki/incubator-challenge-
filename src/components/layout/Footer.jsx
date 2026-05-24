@@ -26,7 +26,12 @@ const footerLinks = {
 export default function Footer() {
   const { t } = useTranslation();
   return (
-    <footer style={{ background: 'linear-gradient(to top, #03061A, #050B2E)', borderTop: '1px solid rgba(255,255,255,0.06)', marginTop: 80 }}>
+    <footer style={{
+      background: 'linear-gradient(to top, var(--navy-950), var(--navy-900))',
+      borderTop: '1px solid var(--glass-border)',
+      marginTop: 80,
+      transition: 'background 0.35s ease',
+    }}>
       {/* CTA Banner */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div
@@ -68,15 +73,21 @@ export default function Footer() {
                 src={`${import.meta.env.BASE_URL}images/gallery/logo.png`}
                 alt="BIS Incubator"
                 style={{
-                  width: 48, height: 48, borderRadius: 14, objectFit: 'contain',
+                  width: 52,
+                  height: 52,
+                  borderRadius: '50%',
+                  objectFit: 'cover',
+                  background: '#fff',
+                  border: '2px solid var(--glass-border)',
+                  boxShadow: '0 2px 12px rgba(46,123,196,0.15)',
                 }}
               />
               <div>
-                <p style={{ fontFamily: 'Sora', fontWeight: 700, color: '#F0F4FF', fontSize: '1.05rem' }}>BIS Incubator</p>
-                <p style={{ fontFamily: 'JetBrains Mono', fontSize: '0.65rem', color: 'rgba(240,244,255,0.35)', letterSpacing: '0.1em' }}>UNIVERSITY OF M'SILA</p>
+                <p style={{ fontFamily: 'Sora', fontWeight: 700, color: 'var(--text-primary)', fontSize: '1.05rem' }}>BIS Incubator</p>
+                <p style={{ fontFamily: 'JetBrains Mono', fontSize: '0.65rem', color: 'var(--text-muted)', letterSpacing: '0.1em' }}>UNIVERSITY OF M'SILA</p>
               </div>
             </div>
-            <p style={{ color: 'rgba(240,244,255,0.55)', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: 24, maxWidth: 320 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: 24, maxWidth: 320 }}>
               {t('footer.tagline')}
             </p>
             {/* Contact info */}
@@ -87,8 +98,8 @@ export default function Footer() {
                 { icon: Phone, text: '+213 35 00 00 00' },
               ].map(({ icon: Icon, text }, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <Icon size={16} style={{ color: '#60A5FA', marginTop: 2, flexShrink: 0 }} />
-                  <span style={{ color: 'rgba(240,244,255,0.55)', fontSize: '0.88rem' }}>{text}</span>
+                  <Icon size={16} style={{ color: 'var(--electric)', marginTop: 2, flexShrink: 0 }} />
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>{text}</span>
                 </div>
               ))}
             </div>
@@ -97,7 +108,7 @@ export default function Footer() {
           {/* Link columns */}
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
-              <h4 style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '0.85rem', color: '#F0F4FF', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 20 }}>
+              <h4 style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-primary)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 20 }}>
                 {title}
               </h4>
               <ul className="flex flex-col gap-3">
@@ -106,7 +117,7 @@ export default function Footer() {
                     <Link
                       to={link.path}
                       style={{
-                        color: 'rgba(240,244,255,0.5)',
+                        color: 'var(--text-muted)',
                         textDecoration: 'none',
                         fontSize: '0.9rem',
                         fontFamily: 'Outfit',
@@ -131,7 +142,7 @@ export default function Footer() {
           className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8"
           style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
         >
-          <p style={{ fontFamily: 'Outfit', fontSize: '0.85rem', color: 'rgba(240,244,255,0.35)' }}>
+          <p style={{ fontFamily: 'Outfit', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
             {t('footer.copyright').replace('{year}', new Date().getFullYear())}
           </p>
 
@@ -153,12 +164,12 @@ export default function Footer() {
                   width: 38,
                   height: 38,
                   borderRadius: 10,
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: 'var(--glass-bg)',
+                  border: '1px solid var(--glass-border)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: 'rgba(240,244,255,0.45)',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease',
                 }}
                 className="hover:bg-blue-500/20 hover:border-blue-500/40 hover:text-blue-400"

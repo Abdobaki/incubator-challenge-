@@ -85,7 +85,7 @@ export default function Gallery() {
                   borderRadius: 16,
                   overflow: 'hidden',
                   cursor: 'pointer',
-                  background: '#0A1245',
+                  background: '#1A2240',
                   transition: 'transform 0.3s cubic-bezier(0.4,0,0.2,1)',
                 }}
                 className="hover:scale-[1.02]"
@@ -149,7 +149,7 @@ export default function Gallery() {
             style={{
               width: '90vw', maxWidth: 900, maxHeight: '85vh',
               borderRadius: 20, overflow: 'hidden',
-              background: 'rgba(10,18,69,0.95)',
+              background: 'rgba(26,34,64,0.95)',
               border: '1px solid rgba(255,255,255,0.1)',
               position: 'relative',
             }}
