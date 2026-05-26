@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
@@ -42,6 +42,7 @@ function AppContent() {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
+  const onLoadComplete = useCallback(() => setLoading(false), []);
 
   return (
     <>
@@ -50,7 +51,7 @@ function AppContent() {
 
       {/* Loading screen — only on first visit */}
       {loading && !isAdmin && (
-        <LoadingScreen onComplete={() => setLoading(false)} />
+        <LoadingScreen onComplete={onLoadComplete} />
       )}
 
       <Routes>

@@ -21,11 +21,11 @@ export default function Programs() {
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
   return (
-    <main style={{ paddingTop: 72 }}>
+    <div style={{ paddingTop: 72 }}>
       {/* Hero */}
       <section style={{
         padding: '80px 0 60px',
-        background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(109,40,217,0.12) 0%, transparent 60%), var(--navy-950)',
+        background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(109,40,217,0.12) 0%, transparent 60%), var(--bg-programs-overlay, none), var(--bg-programs, none) center/cover no-repeat, var(--navy-950)',
         position: 'relative',
         overflow: 'hidden',
       }}>
@@ -196,6 +196,6 @@ export default function Programs() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

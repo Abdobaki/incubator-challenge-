@@ -18,11 +18,11 @@ export default function Startups() {
   });
 
   return (
-    <main style={{ paddingTop: 72 }}>
+    <div style={{ paddingTop: 72 }}>
       {/* Hero */}
       <section style={{
         padding: '80px 0 60px',
-        background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(16,185,129,0.1) 0%, transparent 60%), var(--navy-950)',
+        background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(16,185,129,0.1) 0%, transparent 60%), var(--bg-startups-overlay, none), var(--bg-startups, none) center/cover no-repeat, var(--navy-950)',
         position: 'relative', overflow: 'hidden',
       }}>
         <div className="orb orb-cyan" style={{ width: 500, height: 500, top: '-200px', right: '-100px', opacity: 0.08 }} />
@@ -194,6 +194,6 @@ export default function Startups() {
           )}
         </div>
       </section>
-    </main>
+    </div>
   );
 }

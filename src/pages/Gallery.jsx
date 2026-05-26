@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { X, ZoomIn, Image, Camera, Triangle, Mic, PartyPopper, Zap, Users, Building2, Handshake } from 'lucide-react';
-import { galleryItems } from '../data/index';
+import { galleryItems as fallbackGallery } from '../data/index';
 import { SectionHeader, Reveal } from '../components/ui/index';
 import { useTranslation } from '../hooks/useTranslation';
 
@@ -12,18 +12,30 @@ function TypeIcon({ type }) {
 
 export default function Gallery() {
   const { t } = useTranslation();
+  const [items, setItems] = useState(() => {
+    try { const raw = localStorage.getItem('bis-admin-gallery'); const d = raw ? JSON.parse(raw) : null; if (Array.isArray(d)) return d; } catch {}
+    return fallbackGallery;
+  });
   const [activeType, setActiveType] = useState('All');
   const [lightbox, setLightbox] = useState(null);
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
-  const types = ['All', ...new Set(galleryItems.map(i => i.type))];
-  const filtered = activeType === 'All' ? galleryItems : galleryItems.filter(i => i.type === activeType);
+  useEffect(() => {
+    const handler = () => {
+      try { const raw = localStorage.getItem('bis-admin-gallery'); const d = raw ? JSON.parse(raw) : null; if (Array.isArray(d)) setItems(d); } catch {}
+    };
+    window.addEventListener('storage', handler);
+    return () => window.removeEventListener('storage', handler);
+  }, []);
+
+  const types = ['All', ...new Set(items.map(i => i.type))];
+  const filtered = activeType === 'All' ? items : items.filter(i => i.type === activeType);
 
   return (
-    <main style={{ paddingTop: 72 }}>
+    <div style={{ paddingTop: 72 }}>
       <section style={{
         padding: '80px 0 60px',
-        background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139,92,246,0.1) 0%, transparent 60%), var(--navy-950)',
+        background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139,92,246,0.1) 0%, transparent 60%), var(--bg-gallery-overlay, none), var(--bg-gallery, none) center/cover no-repeat, var(--navy-950)',
         position: 'relative', overflow: 'hidden',
       }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -67,13 +79,12 @@ export default function Gallery() {
       <section style={{ padding: '40px 0 100px' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div
+            className="gallery-grid"
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
               gridAutoRows: '220px',
               gap: 12,
             }}
-            className="sm:grid"
           >
             {filtered.map((item, i) => (
               <div
@@ -181,6 +192,11 @@ export default function Gallery() {
               <h3 style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '1.2rem', color: '#F0F4FF', marginBottom: 6 }}>
                 {lightbox.title}
               </h3>
+              {lightbox.description && (
+                <p style={{ fontFamily: 'Outfit', fontSize: '0.88rem', color: 'rgba(240,244,255,0.6)', marginBottom: 6, lineHeight: 1.6 }}>
+                  {lightbox.description}
+                </p>
+              )}
               <p style={{ fontFamily: 'Outfit', fontSize: '0.88rem', color: 'rgba(240,244,255,0.5)', textTransform: 'capitalize' }}>
                 <TypeIcon type={lightbox.type} /> {lightbox.type}
               </p>
@@ -188,6 +204,6 @@ export default function Gallery() {
           </div>
         </div>
       )}
-    </main>
+    </div>
   );
 }

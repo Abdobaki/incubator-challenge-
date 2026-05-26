@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Play, ChevronDown, Sparkles, Newspaper, Clock, ExternalLink } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
-import { newsArticles } from '../../data/index';
+import { newsArticles as fallbackNews } from '../../data/index';
 
 function Particles() {
   const particles = useMemo(() => Array.from({ length: 20 }, (_, i) => ({
@@ -47,6 +47,10 @@ export default function Hero() {
   ]);
 
   const [displayed, setDisplayed] = useState('');
+  const [newsItems] = useState(() => {
+    try { const raw = localStorage.getItem('bis-admin-news'); const d = raw ? JSON.parse(raw) : null; if (Array.isArray(d)) return d; } catch {}
+    return fallbackNews;
+  });
 
   useEffect(() => {
     wordsRef.current = [
@@ -99,7 +103,7 @@ export default function Hero() {
 
   return (
     <section
-      className="hero-bg grid-bg"
+      className="hero-bg"
       style={{
         minHeight: '100vh',
         display: 'flex',
@@ -267,7 +271,7 @@ export default function Hero() {
 
               {/* News items */}
               <div style={{ display: 'flex', flexDirection: 'column', padding: '8px 0' }}>
-                {[...newsArticles]
+                {[...newsItems]
                   .sort((a, b) => new Date(b.date) - new Date(a.date))
                   .slice(0, 3)
                   .map((article, i) => (
@@ -302,7 +306,7 @@ export default function Hero() {
                       {/* Content */}
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 5 }}>
-                          <span className={`badge ${article.categoryColor}`} style={{ fontSize: '0.6rem', padding: '2px 7px' }}>
+                          <span className={`badge ${article.categoryColor || 'badge-blue'}`} style={{ fontSize: '0.6rem', padding: '2px 7px' }}>
                             {article.category}
                           </span>
                         </div>

@@ -48,18 +48,20 @@ export default function Navbar() {
     <>
       <nav
         className={`navbar-glass fixed top-0 left-0 right-0 z-50 ${scrolled ? 'scrolled' : ''}`}
-        style={{ height: 72 }}
+        style={{ height: 88 }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
+        <div className="max-w-7xl mx-auto h-full flex items-center justify-between"
+          style={{ padding: '0 16px 0 0' }}
+        >
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group" style={{ textDecoration: 'none' }}>
+          <Link to="/" className="flex items-center gap-4 group" style={{ textDecoration: 'none' }}>
             <div style={{ position: 'relative', flexShrink: 0 }}>
               <img
                 src={`${import.meta.env.BASE_URL}images/gallery/logo.png`}
                 alt="BIS Incubator"
                 style={{
-                  width: 52,
-                  height: 52,
+                  width: 56,
+                  height: 56,
                   borderRadius: '50%',
                   objectFit: 'cover',
                   border: isLight
@@ -74,7 +76,7 @@ export default function Navbar() {
                 className="group-hover:scale-105"
               />
             </div>
-            <div className="hidden sm:block">
+            <div className="hidden lg:block">
               <p style={{
                 fontFamily: 'Sora',
                 fontWeight: 700,
@@ -87,7 +89,7 @@ export default function Navbar() {
               </p>
               <p style={{
                 fontFamily: 'JetBrains Mono',
-                fontSize: '0.7rem',
+                fontSize: '0.68rem',
                 color: isLight ? 'rgba(13,27,62,0.38)' : 'rgba(240,244,255,0.4)',
                 letterSpacing: '0.1em',
                 transition: 'color 0.3s ease',
@@ -98,21 +100,39 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`nav-link px-4 py-2 rounded-lg transition-colors ${
+                className={`nav-link rounded-lg transition-all ${
                   location.pathname === link.path
                     ? 'active'
                     : ''
                 }`}
                 style={{
                   textDecoration: 'none',
+                  padding: '8px 14px',
+                  border: `1px solid ${
+                    location.pathname === link.path
+                      ? isLight ? 'rgba(46,123,196,0.4)' : 'rgba(255,255,255,0.2)'
+                      : 'transparent'
+                  }`,
                   background: location.pathname === link.path
-                    ? isLight ? 'rgba(46,123,196,0.08)' : 'rgba(255,255,255,0.05)'
+                    ? isLight ? 'rgba(46,123,196,0.08)' : 'rgba(255,255,255,0.06)'
                     : 'transparent',
+                }}
+                onMouseEnter={(e) => {
+                  if (location.pathname !== link.path) {
+                    e.currentTarget.style.borderColor = isLight ? 'rgba(46,123,196,0.2)' : 'rgba(255,255,255,0.12)';
+                    e.currentTarget.style.background = isLight ? 'rgba(46,123,196,0.04)' : 'rgba(255,255,255,0.03)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (location.pathname !== link.path) {
+                    e.currentTarget.style.borderColor = 'transparent';
+                    e.currentTarget.style.background = 'transparent';
+                  }
                 }}
               >
                 {getLabel(link)}
@@ -195,21 +215,32 @@ export default function Navbar() {
               }
             </button>
 
-            <Link to="/contact" className="btn-primary" style={{ padding: '10px 22px', fontSize: '0.85rem', textDecoration: 'none' }}>
+            <Link to="/contact" className="btn-primary" style={{ padding: '10px 22px', fontSize: '0.85rem', textDecoration: 'none', whiteSpace: 'nowrap' }}>
               Apply Now →
             </Link>
 
             <Link
               to="/admin"
+              className="glass transition-all hidden lg:inline-flex items-center"
               style={{
                 fontFamily: 'JetBrains Mono',
-                fontSize: '0.72rem',
-                color: isLight ? 'rgba(13,27,62,0.3)' : 'rgba(240,244,255,0.35)',
+                fontSize: '0.75rem',
+                padding: '6px 14px',
+                borderRadius: 8,
+                border: isLight ? '1px solid rgba(46,123,196,0.18)' : '1px solid rgba(255,255,255,0.12)',
+                color: isLight ? 'rgba(46,123,196,0.7)' : 'rgba(240,244,255,0.55)',
                 textDecoration: 'none',
                 letterSpacing: '0.05em',
-                transition: 'color 0.2s',
+                transition: 'all 0.2s',
               }}
-              className="hover:text-white/60"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = isLight ? 'rgba(46,123,196,0.35)' : 'rgba(255,255,255,0.25)';
+                e.currentTarget.style.color = isLight ? '#2E7BC4' : '#F0F4FF';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = isLight ? 'rgba(46,123,196,0.18)' : 'rgba(255,255,255,0.12)';
+                e.currentTarget.style.color = isLight ? 'rgba(46,123,196,0.7)' : 'rgba(240,244,255,0.55)';
+              }}
             >
               ADMIN
             </Link>

@@ -51,7 +51,7 @@ export default function LoadingScreen({ onComplete }) {
             src={`${import.meta.env.BASE_URL}images/gallery/logo.png`}
             alt="BIS Incubator"
             style={{
-              width: 80, height: 80, borderRadius: 20, objectFit: 'contain',
+              width: 120, height: 120, borderRadius: '50%', objectFit: 'cover',
               position: 'relative', zIndex: 1,
               boxShadow: '0 0 40px rgba(59,130,246,0.5)',
             }}

@@ -19,14 +19,14 @@ export default function About() {
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
   return (
-    <main style={{ paddingTop: 72 }}>
+    <div style={{ paddingTop: 72 }}>
       {/* Page Hero */}
       <section
         style={{
           padding: '80px 0 60px',
           position: 'relative',
           overflow: 'hidden',
-          background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(59,130,246,0.1) 0%, transparent 60%), var(--navy-950)',
+          background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(59,130,246,0.1) 0%, transparent 60%), var(--bg-about-overlay, none), var(--bg-about, none) center/cover no-repeat, var(--navy-950)',
         }}
       >
         <div className="orb orb-blue" style={{ width: 500, height: 500, top: '-200px', right: '-100px', opacity: 0.1 }} />
@@ -210,14 +210,14 @@ export default function About() {
             {milestones.map((m, i) => (
               <Reveal key={m.year} delay={i * 100}>
                 <div
-                  className="flex items-start gap-8 mb-12"
+                  className="timeline-row"
                   style={{
                     flexDirection: i % 2 === 0 ? 'row' : 'row-reverse',
                     position: 'relative',
                   }}
                 >
                   {/* Content */}
-                  <div style={{ flex: 1, textAlign: i % 2 === 0 ? 'right' : 'left' }}>
+                  <div className="timeline-content" style={{ flex: 1, textAlign: i % 2 === 0 ? 'right' : 'left' }}>
                     <div className="glass-card" style={{ display: 'inline-block', padding: '20px 24px', maxWidth: 360, textAlign: 'left' }}>
                       <p style={{ fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '0.78rem', color: '#60A5FA', marginBottom: 6, letterSpacing: '0.08em' }}>
                         {m.year}
@@ -554,6 +554,6 @@ export default function About() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

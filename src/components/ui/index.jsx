@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useIntersectionObserver, useCounter } from '../../hooks/useIntersectionObserver';
 
 // ═══════════════════════════════════════════════
@@ -92,6 +92,14 @@ export function Badge({ children, color = 'blue', className = '' }) {
 // ═══════════════════════════════════════════════
 export function Reveal({ children, delay = 0, direction = 'up', className = '' }) {
   const [ref, visible] = useIntersectionObserver();
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setRevealed(true), 1500);
+    return () => clearTimeout(t);
+  }, []);
+
+  const show = visible || revealed;
 
   const transforms = {
     up: { from: 'translateY(40px)', to: 'translateY(0)' },
@@ -107,8 +115,8 @@ export function Reveal({ children, delay = 0, direction = 'up', className = '' }
       ref={ref}
       className={className}
       style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? t.to : t.from,
+        opacity: show ? 1 : 0,
+        transform: show ? t.to : t.from,
         transition: `opacity 0.7s cubic-bezier(0.4,0,0.2,1) ${delay}ms, transform 0.7s cubic-bezier(0.4,0,0.2,1) ${delay}ms`,
       }}
     >

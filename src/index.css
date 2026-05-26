@@ -556,22 +556,39 @@ h1, h2, h3, h4, h5, h6 {
 /* ═══════════════════════════════════════════════
    HERO SECTION
 ═══════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════
+   HERO SECTION
+═══════════════════════════════════════════════ */
 .hero-bg {
-  background: radial-gradient(ellipse 80% 80% at 50% -20%, rgba(59,130,246,0.15) 0%, transparent 50%),
-              radial-gradient(ellipse 60% 60% at 80% 50%, rgba(139,92,246,0.1) 0%, transparent 50%),
-              radial-gradient(ellipse 60% 60% at 20% 80%, rgba(0,212,255,0.08) 0%, transparent 50%),
-              #0D1225;
+  --overlay-alpha: 0.55;
+  background:
+    radial-gradient(ellipse 80% 80% at 50% -20%, rgba(59,130,246,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 60% at 80% 50%, rgba(139,92,246,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 60% at 20% 80%, rgba(0,212,255,0.08) 0%, transparent 50%),
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(rgba(0,0,0,calc(var(--overlay-alpha) * var(--bg-hero-active, 0))), rgba(0,0,0,calc(var(--overlay-alpha) * var(--bg-hero-active, 0)))),
+    var(--bg-hero, none) center/cover no-repeat,
+    #0D1225;
+  background-size: auto, auto, auto, 60px 60px, 60px 60px, auto, cover;
 }
 
 [data-theme="light"] .hero-bg {
-  background: radial-gradient(ellipse 80% 80% at 50% -20%, rgba(46,123,196,0.1) 0%, transparent 50%),
-              radial-gradient(ellipse 60% 60% at 80% 50%, rgba(109,179,63,0.06) 0%, transparent 50%),
-              radial-gradient(ellipse 60% 60% at 20% 80%, rgba(46,123,196,0.06) 0%, transparent 50%),
-              #F5F7FA;
+  --overlay-alpha: 0.15;
+  background:
+    radial-gradient(ellipse 80% 80% at 50% -20%, rgba(46,123,196,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 60% at 80% 50%, rgba(109,179,63,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 60% at 20% 80%, rgba(46,123,196,0.06) 0%, transparent 50%),
+    linear-gradient(rgba(46,123,196,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(46,123,196,0.06) 1px, transparent 1px),
+    linear-gradient(rgba(0,0,0,calc(var(--overlay-alpha) * var(--bg-hero-active, 0))), rgba(0,0,0,calc(var(--overlay-alpha) * var(--bg-hero-active, 0)))),
+    var(--bg-hero, none) center/cover no-repeat,
+    #F5F7FA;
+  background-size: auto, auto, auto, 60px 60px, 60px 60px, auto, cover;
 }
 
 /* ═══════════════════════════════════════════════
-   GRID BACKGROUND
+   GRID BACKGROUND (other sections)
 ═══════════════════════════════════════════════ */
 .grid-bg {
   background-image:
@@ -892,6 +909,94 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+.gallery-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+@media (max-width: 900px) {
+  .gallery-grid { grid-template-columns: repeat(3, 1fr) !important; grid-auto-rows: 200px !important; }
+}
+@media (max-width: 640px) {
+  .gallery-grid { grid-template-columns: repeat(2, 1fr) !important; grid-auto-rows: 160px !important; gap: 8px !important; }
+}
+@media (max-width: 400px) {
+  .gallery-grid { grid-template-columns: repeat(2, 1fr) !important; grid-auto-rows: 130px !important; }
+}
+
+.timeline-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+@media (max-width: 640px) {
+  .timeline-row {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+    padding-left: 40px;
+  }
+  .timeline-row .timeline-content {
+    text-align: left !important;
+  }
+  .timeline-row .timeline-content > div {
+    max-width: 100% !important;
+  }
+}
+
+/* ── Mobile section padding reduction ── */
+@media (max-width: 640px) {
+  section[style*="padding: 80px 0"],
+  section[style*="padding:80px 0"] {
+    padding: 40px 0 !important;
+  }
+  section[style*="padding: 100px 0"],
+  section[style*="padding:100px 0"] {
+    padding: 48px 0 !important;
+  }
+  section[style*="padding: 80px 0 60px"],
+  section[style*="padding:80px 0 60px"] {
+    padding: 40px 0 30px !important;
+  }
+  section[style*="padding: 60px 0 100px"],
+  section[style*="padding:60px 0 100px"] {
+    padding: 30px 0 48px !important;
+  }
+  section[style*="padding: 40px 0 100px"],
+  section[style*="padding:40px 0 100px"] {
+    padding: 24px 0 48px !important;
+  }
+  section[style*="padding: 60px 0"],
+  section[style*="padding:60px 0"] {
+    padding: 32px 0 !important;
+  }
+  section[style*="padding: 100px 0 80px"],
+  section[style*="padding:100px 0 80px"] {
+    padding: 48px 0 40px !important;
+  }
+}
+
+/* ── Card padding reduction on mobile ── */
+@media (max-width: 640px) {
+  [style*="padding: 60px 40px"],
+  [style*="padding:60px 40px"] {
+    padding: 32px 20px !important;
+  }
+  [style*="padding: 40px 40px"],
+  [style*="padding:40px 40px"] {
+    padding: 24px 20px !important;
+  }
+  [style*="padding: 20px 24px"],
+  [style*="padding:20px 24px"] {
+    padding: 16px !important;
+  }
+}
+
+/* ── Absolute-positioned orb decorations ── */
+@media (max-width: 640px) {
+  .orb {
+    display: none !important;
+  }
+}
+
 /* ═══════════════════════════════════════════════
    CUSTOM SELECTION
 ═══════════════════════════════════════════════ */
@@ -1051,6 +1156,19 @@ h1, h2, h3, h4, h5, h6 {
 [data-theme="light"] ::selection {
   background: rgba(46,123,196,0.25);
   color: #0D1B3E;
+}
+
+/* ── Force hero & footer text white when custom bg is active ── */
+html[data-bg-active] .hero-bg .grid > div:first-child,
+html[data-bg-active] .hero-bg .grid > div:first-child *,
+html[data-bg-active] main > section:first-child h1,
+html[data-bg-active] main > section:first-child > div p,
+html[data-bg-active] footer h2,
+html[data-bg-active] footer h3,
+html[data-bg-active] footer p,
+html[data-bg-active] footer a,
+html[data-bg-active] footer span {
+  color: #FFFFFF !important;
 }
 
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Calendar, MapPin, Clock, Users, ArrowRight, Tag, Rocket, Zap, Trophy, Handshake, Globe, MailX, Archive } from 'lucide-react';
-import { events } from '../data/index';
+import { events as fallbackEvents } from '../data/index';
 import { SectionHeader, Reveal } from '../components/ui/index';
 import { useTranslation } from '../hooks/useTranslation';
 
@@ -23,9 +23,12 @@ function EventCard({ event, i, localeData, lang = 'en' }) {
   const pct = Math.round((event.registered / event.capacity) * 100);
 
   const formatDate = (d) => {
-    const dt = new Date(d);
-    const loc = lang === 'ar' ? 'ar-DZ' : lang === 'fr' ? 'fr-FR' : 'en-US';
-    return dt.toLocaleDateString(loc, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    if (!d) return '';
+    try {
+      const dt = new Date(d);
+      const loc = lang === 'ar' ? 'ar-DZ' : lang === 'fr' ? 'fr-FR' : 'en-US';
+      return dt.toLocaleDateString(loc, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    } catch { return d; }
   };
 
   return (
@@ -69,10 +72,10 @@ function EventCard({ event, i, localeData, lang = 'en' }) {
             }}
           >
             <p style={{ fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '1.4rem', color: isPast ? 'rgba(240,244,255,0.4)' : '#60A5FA', lineHeight: 1 }}>
-              {new Date(event.date).getDate()}
+              {event.date ? new Date(event.date).getDate() : '--'}
             </p>
             <p style={{ fontFamily: 'Outfit', fontSize: '0.72rem', color: 'rgba(240,244,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-              {new Date(event.date).toLocaleString(lang === 'ar' ? 'ar-DZ' : lang === 'fr' ? 'fr-FR' : 'en-US', { month: 'short' })}
+              {event.date ? new Date(event.date).toLocaleString(lang === 'ar' ? 'ar-DZ' : lang === 'fr' ? 'fr-FR' : 'en-US', { month: 'short' }) : '---'}
             </p>
           </div>
 
@@ -168,15 +171,27 @@ function EventCard({ event, i, localeData, lang = 'en' }) {
 export default function Events() {
   const { t, localeData, lang } = useTranslation();
   const [tab, setTab] = useState('upcoming');
+  const [items, setItems] = useState(() => {
+    try { const raw = localStorage.getItem('bis-admin-events'); const d = raw ? JSON.parse(raw) : null; if (Array.isArray(d)) return d; } catch {}
+    return fallbackEvents;
+  });
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
-  const filtered = events.filter(e => e.status === tab);
+  useEffect(() => {
+    const handler = () => {
+      try { const raw = localStorage.getItem('bis-admin-events'); const d = raw ? JSON.parse(raw) : null; if (Array.isArray(d)) setItems(d); } catch {}
+    };
+    window.addEventListener('storage', handler);
+    return () => window.removeEventListener('storage', handler);
+  }, []);
+
+  const filtered = items.filter(e => e.status === tab);
 
   return (
-    <main style={{ paddingTop: 72 }}>
+    <div style={{ paddingTop: 72 }}>
       <section style={{
         padding: '80px 0 60px',
-        background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(245,158,11,0.08) 0%, transparent 60%), var(--navy-950)',
+        background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(245,158,11,0.08) 0%, transparent 60%), var(--bg-events-overlay, none), var(--bg-events, none) center/cover no-repeat, var(--navy-950)',
         position: 'relative', overflow: 'hidden',
       }}>
         <div className="orb orb-blue" style={{ width: 400, height: 400, top: '-150px', right: '-80px', opacity: 0.08 }} />
@@ -203,6 +218,7 @@ export default function Events() {
               borderRadius: 14,
               padding: 4,
               display: 'inline-flex',
+              flexWrap: 'wrap',
             }}
           >
             {['upcoming', 'past'].map((tabKey) => (
@@ -245,6 +261,6 @@ export default function Events() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

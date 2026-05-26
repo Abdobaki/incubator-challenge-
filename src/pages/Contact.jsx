@@ -39,10 +39,10 @@ export default function Contact() {
   };
 
   return (
-    <main style={{ paddingTop: 72 }}>
+    <div style={{ paddingTop: 72 }}>
       <section style={{
         padding: '80px 0 60px',
-        background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(16,185,129,0.08) 0%, transparent 60%), var(--navy-950)',
+        background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(16,185,129,0.08) 0%, transparent 60%), var(--bg-contact-overlay, none), var(--bg-contact, none) center/cover no-repeat, var(--navy-950)',
         position: 'relative', overflow: 'hidden',
       }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -276,6 +276,6 @@ export default function Contact() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

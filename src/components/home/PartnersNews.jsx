@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar, Newspaper, Trophy, DollarSign, Target, Medal, Handshake, Megaphone } from 'lucide-react';
-import { partners, newsArticles } from '../../data/index';
+import { partners, newsArticles as fallbackNews } from '../../data/index';
 import { SectionHeader, Reveal } from '../ui/index';
 import { useTranslation } from '../../hooks/useTranslation';
 
@@ -72,7 +72,11 @@ export function Partners() {
 // ═══════════════════════════════════════════════
 export function LatestNews() {
   const { t, localeData, lang } = useTranslation();
-  const latest = newsArticles.slice(0, 3);
+  const [items, setItems] = React.useState(() => {
+    try { const raw = localStorage.getItem('bis-admin-news'); const d = raw ? JSON.parse(raw) : null; if (Array.isArray(d)) return d; } catch {}
+    return fallbackNews;
+  });
+  const latest = items.slice(0, 3);
 
   const formatDate = (dateStr) => {
     const d = new Date(dateStr);
@@ -144,7 +148,7 @@ export function LatestNews() {
 
                 {/* Category + date */}
                 <div className="flex items-center justify-between mb-3">
-                  <span className={`badge ${article.categoryColor}`} style={{ fontSize: '0.68rem' }}>
+                  <span className={`badge ${article.categoryColor || 'badge-blue'}`} style={{ fontSize: '0.68rem' }}>
                     {article.category}
                   </span>
                   <div className="flex items-center gap-1">

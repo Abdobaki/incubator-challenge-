@@ -1,43 +1,58 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, Clock, Search, ArrowRight, BookOpen, Newspaper, Trophy, DollarSign, Target, Medal, Handshake, Megaphone, MailX } from 'lucide-react';
-import { newsArticles } from '../data/index';
-import { SectionHeader, Reveal } from '../components/ui/index';
+import { Calendar, Clock, Search, ArrowRight, BookOpen, Newspaper, Trophy, Target, Megaphone, Zap, MailX } from 'lucide-react';
+import { newsArticles as fallbackNews } from '../data/index';
+import { Reveal } from '../components/ui/index';
 import { useTranslation } from '../hooks/useTranslation';
 
-const categories = ['All', 'Award', 'Funding', 'Program', 'Achievement', 'Partnership', 'Announcement'];
+const categories = ['All', 'Event', 'Achievement', 'Technology', 'Hackathon'];
 
 export default function News() {
   const { t, localeData, lang } = useTranslation();
   const [activeCategory, setActiveCategory] = useState('All');
   const [search, setSearch] = useState('');
+  const [items, setItems] = useState(() => {
+    try { const raw = localStorage.getItem('bis-admin-news'); const d = raw ? JSON.parse(raw) : null; if (Array.isArray(d)) return d; } catch {}
+    return fallbackNews;
+  });
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
-  const filtered = newsArticles.filter(a => {
+  useEffect(() => {
+    const handler = () => {
+      try { const raw = localStorage.getItem('bis-admin-news'); const d = raw ? JSON.parse(raw) : null; if (Array.isArray(d)) setItems(d); } catch {}
+    };
+    window.addEventListener('storage', handler);
+    return () => window.removeEventListener('storage', handler);
+  }, []);
+
+  const filtered = items.filter(a => {
     const matchCat = activeCategory === 'All' || a.category === activeCategory;
-    const matchSearch = a.title.toLowerCase().includes(search.toLowerCase()) ||
-      a.excerpt.toLowerCase().includes(search.toLowerCase());
+    const matchSearch = (a.title || '').toLowerCase().includes(search.toLowerCase()) ||
+      (a.excerpt || '').toLowerCase().includes(search.toLowerCase());
     return matchCat && matchSearch;
   });
 
-  const featured = newsArticles.find(a => a.featured);
-  const rest = filtered.filter(a => !a.featured || search || activeCategory !== 'All');
+  const featured = filtered.find(a => a.featured);
+  const gridItems = featured ? filtered.filter(a => a.id !== featured.id) : filtered;
 
   const formatDate = (d) => {
-    const loc = lang === 'ar' ? 'ar-DZ' : lang === 'fr' ? 'fr-FR' : 'en-US';
-    return new Date(d).toLocaleDateString(loc, { month: 'long', day: 'numeric', year: 'numeric' });
+    if (!d) return '';
+    try {
+      const loc = lang === 'ar' ? 'ar-DZ' : lang === 'fr' ? 'fr-FR' : 'en-US';
+      return new Date(d).toLocaleDateString(loc, { month: 'long', day: 'numeric', year: 'numeric' });
+    } catch { return d; }
   };
 
   const getCategoryIcon = (category, size = 14) => {
-    const icons = { Award: Trophy, Funding: DollarSign, Program: Target, Achievement: Medal, Partnership: Handshake, Announcement: Megaphone };
+    const icons = { Event: Megaphone, Achievement: Trophy, Technology: Target, Hackathon: Zap };
     const Icon = icons[category] || Newspaper;
     return <Icon size={size} />;
   };
 
   return (
-    <main style={{ paddingTop: 72 }}>
+    <div style={{ paddingTop: 72 }}>
       <section style={{
         padding: '80px 0 60px',
-        background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(59,130,246,0.1) 0%, transparent 60%), var(--navy-950)',
+        background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(59,130,246,0.1) 0%, transparent 60%), var(--bg-news-overlay, none), var(--bg-news, none) center/cover no-repeat, var(--navy-950)',
         position: 'relative', overflow: 'hidden',
       }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -68,19 +83,26 @@ export default function News() {
                 }}
               >
                 <div className="grid grid-cols-1 lg:grid-cols-2">
-                  {/* Image placeholder */}
+                  {/* Image */}
                   <div style={{
                     minHeight: 280,
-                    background: 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(109,40,217,0.15))',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '5rem',
                     position: 'relative',
                     overflow: 'hidden',
                   }}>
-                    <div className="orb orb-blue" style={{ width: 300, height: 300, top: '-80px', left: '-60px', opacity: 0.25 }} />
-                    <Trophy size={48} style={{ opacity: 0.3 }} />
+                    {featured.image ? (
+                      <img src={featured.image} alt={localeData(featured, 'title')}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }} />
+                    ) : (
+                      <div style={{
+                        width: '100%', height: '100%',
+                        background: 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(109,40,217,0.15))',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        position: 'absolute', inset: 0,
+                      }}>
+                        <div className="orb orb-blue" style={{ width: 300, height: 300, top: '-80px', left: '-60px', opacity: 0.25 }} />
+                        <Trophy size={48} style={{ opacity: 0.3 }} />
+                      </div>
+                    )}
                   </div>
                   {/* Content */}
                   <div style={{ padding: '40px 40px' }}>
@@ -97,7 +119,7 @@ export default function News() {
                       }}>
                         FEATURED
                       </span>
-                      <span className={`badge ${featured.categoryColor}`} style={{ fontSize: '0.68rem' }}>
+                      <span className={`badge ${featured.categoryColor || 'badge-blue'}`} style={{ fontSize: '0.68rem' }}>
                         {getCategoryIcon(featured.category)} {featured.category}
                       </span>
                     </div>
@@ -170,7 +192,7 @@ export default function News() {
       <section style={{ padding: '40px 0 100px' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map((article, i) => (
+            {gridItems.map((article, i) => (
               <Reveal key={article.id} delay={i * 80} direction="up">
                 <div className="glass-card" style={{ height: '100%', cursor: 'pointer' }}>
                   <div
@@ -186,7 +208,7 @@ export default function News() {
                     {getCategoryIcon(article.category, 40)}
                   </div>
                   <div className="flex items-center justify-between mb-3">
-                    <span className={`badge ${article.categoryColor}`} style={{ fontSize: '0.68rem' }}>
+                    <span className={`badge ${article.categoryColor || 'badge-blue'}`} style={{ fontSize: '0.68rem' }}>
                       {getCategoryIcon(article.category)} {article.category}
                     </span>
                     <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.68rem', color: 'rgba(240,244,255,0.3)' }}>
@@ -218,7 +240,7 @@ export default function News() {
             ))}
           </div>
 
-          {filtered.length === 0 && (
+          {gridItems.length === 0 && (
             <div className="text-center py-20">
               <MailX size={48} style={{ marginBottom: 16 }} />
               <p style={{ fontFamily: 'Sora', fontWeight: 600, color: 'rgba(240,244,255,0.5)', fontSize: '1.1rem' }}>No articles found</p>
@@ -226,6 +248,6 @@ export default function News() {
           )}
         </div>
       </section>
-    </main>
+    </div>
   );
 }

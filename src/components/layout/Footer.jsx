@@ -27,7 +27,7 @@ export default function Footer() {
   const { t } = useTranslation();
   return (
     <footer style={{
-      background: 'linear-gradient(to top, var(--navy-950), var(--navy-900))',
+      background: 'var(--bg-footer-overlay, none), var(--bg-footer, none) center/cover no-repeat, linear-gradient(to top, var(--navy-950), var(--navy-900))',
       borderTop: '1px solid var(--glass-border)',
       marginTop: 80,
       transition: 'background 0.35s ease',
