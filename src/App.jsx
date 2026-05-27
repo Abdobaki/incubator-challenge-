@@ -18,6 +18,25 @@ import Contact from './pages/Contact';
 import { AdminLogin } from './pages/admin/AdminLogin';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 
+// ── Auto-cleanup: remove corrupted / empty localStorage entries on startup ──
+(() => {
+  try {
+    ['bis-admin-news', 'bis-admin-events', 'bis-admin-startups'].forEach(key => {
+      const raw = localStorage.getItem(key);
+      if (raw !== null) {
+        try {
+          const d = JSON.parse(raw);
+          if (Array.isArray(d) && d.length === 0) {
+            localStorage.removeItem(key);
+          }
+        } catch {
+          localStorage.removeItem(key); // corrupted JSON
+        }
+      }
+    });
+  } catch {}
+})();
+
 // Scroll to top on route change
 function ScrollToTop() {
   const { pathname } = useLocation();

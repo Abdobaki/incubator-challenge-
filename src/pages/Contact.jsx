@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { MapPin, Mail, Phone, Facebook, Linkedin, Twitter, Instagram, Send, CheckCircle, Map, PartyPopper } from 'lucide-react';
 import { Reveal } from '../components/ui/index';
 import { useTranslation } from '../hooks/useTranslation';
+import { useTheme } from '../context/ThemeContext';
 
 const contactInfo = [
   { icon: MapPin, label: 'Address', value: 'Université de M\'sila, BP 166, Route Ichbilia, 28000 M\'sila, Algérie', color: '#3B82F6' },
@@ -27,6 +28,10 @@ const reasons = [
 
 export default function Contact() {
   const { t } = useTranslation();
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
+  const optionBg = isLight ? '#FFFFFF' : '#1A2240';
+  const optionColor = isLight ? '#0D1B3E' : '#F0F4FF';
   const [form, setForm] = useState({ name: '', email: '', organization: '', reason: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -224,9 +229,9 @@ export default function Contact() {
                           onChange={e => setForm({ ...form, reason: e.target.value })}
                           style={{ cursor: 'pointer' }}
                         >
-                          <option value="" disabled style={{ background: '#1A2240' }}>Select a reason...</option>
+                          <option value="" disabled style={{ background: optionBg, color: optionColor }}>Select a reason...</option>
                           {reasons.map(r => (
-                            <option key={r} value={r} style={{ background: '#1A2240' }}>{r}</option>
+                            <option key={r} value={r} style={{ background: optionBg, color: optionColor }}>{r}</option>
                           ))}
                         </select>
                       </div>

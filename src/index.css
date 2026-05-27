@@ -816,6 +816,12 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 0 0 3px rgba(46, 123, 196, 0.12);
 }
 
+/* Dropdown options in light mode — browser may ignore inline styles on <option> */
+[data-theme="light"] select.input-glass option {
+  background: #FFFFFF;
+  color: #0D1B3E;
+}
+
 /* ═══════════════════════════════════════════════
    ADMIN SIDEBAR
 ═══════════════════════════════════════════════ */
@@ -1156,6 +1162,48 @@ h1, h2, h3, h4, h5, h6 {
 [data-theme="light"] ::selection {
   background: rgba(46,123,196,0.25);
   color: #0D1B3E;
+}
+
+/* ── Ghost containers: rgba(255,255,255,0.02–0.04) are invisible on white ── */
+[data-theme="light"] [style*="background: rgba(255, 255, 255, 0.04)"],
+[data-theme="light"] [style*="background: rgba(255,255,255,0.04)"],
+[data-theme="light"] [style*="background:rgba(255,255,255,0.04)"] {
+  background: rgba(46,123,196,0.06) !important;
+}
+
+[data-theme="light"] [style*="background: rgba(255, 255, 255, 0.03)"],
+[data-theme="light"] [style*="background: rgba(255,255,255,0.03)"],
+[data-theme="light"] [style*="background:rgba(255,255,255,0.03)"] {
+  background: rgba(46,123,196,0.05) !important;
+}
+
+[data-theme="light"] [style*="background: rgba(255, 255, 255, 0.02)"],
+[data-theme="light"] [style*="background: rgba(255,255,255,0.02)"],
+[data-theme="light"] [style*="background:rgba(255,255,255,0.02)"] {
+  background: rgba(46,123,196,0.03) !important;
+}
+
+/* ── Activity row containers (admin dashboard) ── */
+[data-theme="light"] [style*="background: rgba(255, 255, 255, 0.05)"],
+[data-theme="light"] [style*="background: rgba(255,255,255,0.05)"],
+[data-theme="light"] [style*="background:rgba(255,255,255,0.05)"] {
+  background: rgba(46,123,196,0.08) !important;
+}
+
+/* Ensure gallery image overlay text is always white */
+[data-theme="light"] .gallery-img-overlay p,
+[data-theme="light"] .gallery-img-overlay h1,
+[data-theme="light"] .gallery-img-overlay h2,
+[data-theme="light"] .gallery-img-overlay h3,
+[data-theme="light"] .gallery-img-overlay h4,
+[data-theme="light"] .gallery-img-overlay span,
+.gallery-img-overlay p,
+.gallery-img-overlay h1,
+.gallery-img-overlay h2,
+.gallery-img-overlay h3,
+.gallery-img-overlay h4,
+.gallery-img-overlay span {
+  color: #FFFFFF !important;
 }
 
 /* ── Force hero & footer text white when custom bg is active ── */

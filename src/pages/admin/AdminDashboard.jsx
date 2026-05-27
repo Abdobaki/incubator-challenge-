@@ -29,14 +29,27 @@ function loadData(key, fallback) {
     const raw = localStorage.getItem(STORAGE_PREFIX + key);
     if (raw) {
       const d = JSON.parse(raw);
-      if (Array.isArray(d)) return d;
+      if (Array.isArray(d) && d.length > 0) return d;
     }
   } catch {}
   return fallback;
 }
 
 function saveData(key, data) {
-  localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(data));
+  try {
+    localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(data));
+  } catch (e) {
+    // If quota exceeded, try to free space by stripping base64 images from gallery
+    if (key !== 'gallery') {
+      try {
+        localStorage.removeItem(STORAGE_PREFIX + 'gallery');
+        localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(data));
+        return;
+      } catch {}
+    }
+    console.error('Failed to save to localStorage:', e);
+    alert('Storage is full. Try removing some gallery images to free space.');
+  }
 }
 
 function CrudModal({ fields, item, onSave, onClose, t }) {
@@ -62,7 +75,7 @@ function CrudModal({ fields, item, onSave, onClose, t }) {
       <div className="glass-card" style={{ maxWidth: 520, width: '100%', padding: 28, maxHeight: '80vh', overflowY: 'auto' }}
         onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-6">
-          <h3 style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '1.1rem', color: '#F0F4FF' }}>
+          <h3 style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-primary)' }}>
             {isNew ? 'Add' : 'Edit'} {t('admin.manage').replace('Manage ', '')}
           </h3>
           <button onClick={onClose} style={{ width: 32, height: 32, borderRadius: 8, border: 'none', cursor: 'pointer', background: 'rgba(255,255,255,0.06)', color: 'rgba(240,244,255,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -73,7 +86,7 @@ function CrudModal({ fields, item, onSave, onClose, t }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {fields.map(({ key, label, type, options }) => (
             <div key={key}>
-              <label style={{ fontFamily: 'Sora', fontWeight: 600, fontSize: '0.78rem', color: 'rgba(240,244,255,0.55)', display: 'block', marginBottom: 6 }}>
+              <label style={{ fontFamily: 'Sora', fontWeight: 600, fontSize: '0.78rem', color: 'var(--text-secondary)', display: 'block', marginBottom: 6 }}>
                 {label}
               </label>
               {type === 'textarea' ? (
@@ -377,23 +390,47 @@ function GalleryManager({ t }) {
   const types = ['all', ...new Set(items.map(i => i.type))];
   const filtered = filter === 'all' ? items : items.filter(i => i.type === filter);
 
-  const handleUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const readers = files.map((f, i) => new Promise(resolve => {
+  const compressImage = (file) => new Promise(resolve => {
+    if (file.type.startsWith('video/')) {
       const reader = new FileReader();
-      reader.onload = () => resolve({
+      reader.onload = () => resolve(reader.result);
+      reader.readAsDataURL(file);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new window.Image();
+      img.onload = () => {
+        const MAX = 800;
+        let w = img.width, h = img.height;
+        if (w > MAX || h > MAX) {
+          if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+          else { w = Math.round(w * MAX / h); h = MAX; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.7));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  const handleUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    const newItems = await Promise.all(files.map(async (f, i) => {
+      const dataUrl = await compressImage(f);
+      return {
         id: Date.now() + i,
         title: f.name.replace(/\.[^/.]+$/, ''),
         type: f.type.startsWith('video/') ? 'video' : 'other',
-        image: reader.result,
+        image: dataUrl,
         description: '',
         span: 'col-span-1 row-span-1',
-      });
-      reader.readAsDataURL(f);
+      };
     }));
-    Promise.all(readers).then(newItems => {
-      setItems(prev => [...newItems, ...prev]);
-    });
+    setItems(prev => [...newItems, ...prev]);
   };
 
   const handleDelete = (id) => {
@@ -410,7 +447,7 @@ function GalleryManager({ t }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <h2 style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '1.4rem', color: '#F0F4FF' }}>{t('admin.manage')} Gallery</h2>
+        <h2 style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '1.4rem', color: 'var(--text-primary)' }}>{t('admin.manage')} Gallery</h2>
         <label className="btn-primary" style={{ cursor: 'pointer', fontSize: '0.85rem', padding: '10px 20px', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
           <Upload size={16} /> Add Images
           <input type="file" multiple accept="image/*,video/*" onChange={handleUpload} style={{ display: 'none' }} />
@@ -444,23 +481,20 @@ function GalleryManager({ t }) {
                   <img src={item.image} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s' }}
                     className="group-hover:scale-105" />
                 )}
-                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)', padding: '12px 14px' }}>
+                <div className="gallery-img-overlay" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)', padding: '12px 14px' }}>
                   <p style={{ fontFamily: 'Outfit', fontSize: '0.78rem', color: 'white', fontWeight: 500 }}>{item.title}</p>
                   <p style={{ fontFamily: 'JetBrains Mono', fontSize: '0.6rem', color: 'rgba(255,255,255,0.5)', textTransform: 'capitalize' }}>{item.type}</p>
                 </div>
-                {item.id && (
-                  <div style={{ position: 'absolute', top: 8, right: 8, display: 'flex', gap: 4, opacity: 0, transition: 'opacity 0.2s' }}
-                    className="group-hover:opacity-100">
+                  <div style={{ position: 'absolute', top: 8, right: 8, display: 'flex', gap: 4 }}>
                     <button onClick={(e) => { e.stopPropagation(); setEditing(item); }}
-                      style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(59,130,246,0.8)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
+                      style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(59,130,246,0.85)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
                       <Edit size={13} />
                     </button>
                     <button onClick={(e) => { e.stopPropagation(); handleDelete(item.id); }}
-                      style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(239,68,68,0.8)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
+                      style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(239,68,68,0.85)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
                       <Trash2 size={13} />
                     </button>
                   </div>
-                )}
               </div>
             ))}
           </div>
@@ -478,7 +512,7 @@ function GalleryManager({ t }) {
             ) : (
               <img src={selected.image} alt={selected.title} style={{ width: '100%', maxHeight: '80vh', objectFit: 'contain' }} />
             )}
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)', padding: 16 }}>
+            <div className="gallery-img-overlay" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)', padding: 16 }}>
               <p style={{ fontFamily: 'Sora', fontWeight: 600, color: 'white', fontSize: '1rem' }}>{selected.title}</p>
               {selected.description && (
                 <p style={{ fontFamily: 'Outfit', fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)', marginTop: 4 }}>{selected.description}</p>
@@ -494,11 +528,11 @@ function GalleryManager({ t }) {
 
       {/* Edit modal */}
       {editing && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: 24, overflowY: 'auto' }}
           onClick={() => setEditing(null)}>
-          <div className="glass-card" style={{ maxWidth: 480, width: '100%', padding: 28 }} onClick={e => e.stopPropagation()}>
+          <div className="glass-card" style={{ maxWidth: 480, width: '100%', padding: 28, marginTop: 'auto', marginBottom: 'auto' }} onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
-              <h3 style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '1.1rem', color: '#F0F4FF' }}>Edit Image</h3>
+              <h3 style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-primary)' }}>Edit Image</h3>
               <button onClick={() => setEditing(null)} style={{ width: 32, height: 32, borderRadius: 8, border: 'none', cursor: 'pointer', background: 'rgba(255,255,255,0.06)', color: 'rgba(240,244,255,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <X size={16} />
               </button>
@@ -512,23 +546,22 @@ function GalleryManager({ t }) {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div>
-                <label style={{ fontFamily: 'Sora', fontWeight: 600, fontSize: '0.78rem', color: 'rgba(240,244,255,0.55)', display: 'block', marginBottom: 6 }}>Replace Image</label>
-                <input type="file" accept="image/*,video/*" style={{ width: '100%', padding: '6px 0', color: 'rgba(240,244,255,0.6)', fontFamily: 'Outfit', fontSize: '0.85rem' }}
-                  onChange={e => {
+                <label style={{ fontFamily: 'Sora', fontWeight: 600, fontSize: '0.78rem', color: 'var(--text-secondary)', display: 'block', marginBottom: 6 }}>Replace Image</label>
+                <input type="file" accept="image/*,video/*" style={{ width: '100%', padding: '6px 0', color: 'var(--text-secondary)', fontFamily: 'Outfit', fontSize: '0.85rem' }}
+                  onChange={async e => {
                     const f = e.target.files?.[0];
                     if (f) {
-                      const r = new FileReader();
-                      r.onload = () => setEditing(p => ({ ...p, image: r.result }));
-                      r.readAsDataURL(f);
+                      const dataUrl = await compressImage(f);
+                      setEditing(p => ({ ...p, image: dataUrl }));
                     }
                   }} />
               </div>
               <div>
-                <label style={{ fontFamily: 'Sora', fontWeight: 600, fontSize: '0.78rem', color: 'rgba(240,244,255,0.55)', display: 'block', marginBottom: 6 }}>Title</label>
+                <label style={{ fontFamily: 'Sora', fontWeight: 600, fontSize: '0.78rem', color: 'var(--text-secondary)', display: 'block', marginBottom: 6 }}>Title</label>
                 <input className="input-glass" value={editing.title || ''} onChange={e => setEditing(p => ({ ...p, title: e.target.value }))} />
               </div>
               <div>
-                <label style={{ fontFamily: 'Sora', fontWeight: 600, fontSize: '0.78rem', color: 'rgba(240,244,255,0.55)', display: 'block', marginBottom: 6 }}>Type</label>
+                <label style={{ fontFamily: 'Sora', fontWeight: 600, fontSize: '0.78rem', color: 'var(--text-secondary)', display: 'block', marginBottom: 6 }}>Type</label>
                 <select className="input-glass" value={editing.type || 'other'} onChange={e => setEditing(p => ({ ...p, type: e.target.value }))} style={{ appearance: 'auto', cursor: 'pointer' }}>
                   {galleryTypes.map(type => (
                     <option key={type} value={type}>{type}</option>
@@ -536,11 +569,11 @@ function GalleryManager({ t }) {
                 </select>
               </div>
               <div>
-                <label style={{ fontFamily: 'Sora', fontWeight: 600, fontSize: '0.78rem', color: 'rgba(240,244,255,0.55)', display: 'block', marginBottom: 6 }}>Description</label>
+                <label style={{ fontFamily: 'Sora', fontWeight: 600, fontSize: '0.78rem', color: 'var(--text-secondary)', display: 'block', marginBottom: 6 }}>Description</label>
                 <textarea className="input-glass" rows={3} value={editing.description || ''} onChange={e => setEditing(p => ({ ...p, description: e.target.value }))} />
               </div>
               <div>
-                <label style={{ fontFamily: 'Sora', fontWeight: 600, fontSize: '0.78rem', color: 'rgba(240,244,255,0.55)', display: 'block', marginBottom: 6 }}>Grid Span</label>
+                <label style={{ fontFamily: 'Sora', fontWeight: 600, fontSize: '0.78rem', color: 'var(--text-secondary)', display: 'block', marginBottom: 6 }}>Grid Span</label>
                 <select className="input-glass" value={editing.span || 'col-span-1 row-span-1'} onChange={e => setEditing(p => ({ ...p, span: e.target.value }))} style={{ appearance: 'auto', cursor: 'pointer' }}>
                   <option value="col-span-1 row-span-1">Small (1x1)</option>
                   <option value="col-span-2">Wide (2x1)</option>
@@ -916,6 +949,26 @@ function ProfileDropdown({ t, onClose, navigate }) {
   );
 }
 
+function ThemeToggle() {
+  const { theme, toggleTheme } = useTheme();
+  const isLight = theme === 'light';
+  return (
+    <button
+      onClick={toggleTheme}
+      title={isLight ? 'Switch to dark mode' : 'Switch to light mode'}
+      style={{
+        width: 38, height: 38, borderRadius: 10,
+        background: 'var(--glass-bg)', border: '1px solid var(--glass-border)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        cursor: 'pointer', color: 'var(--text-secondary)',
+        transition: 'all 0.2s',
+      }}
+    >
+      {isLight ? <Moon size={16} /> : <Sun size={16} />}
+    </button>
+  );
+}
+
 function LanguageSwitcher() {
   const { lang, switchLang, languages } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -1075,7 +1128,8 @@ export function AdminDashboard() {
               <Menu size={18} />
             </button>
           )}
-          <div className="flex items-center gap-3" style={{ marginLeft: isMobile ? 'auto' : 0 }}>
+          <div className="flex items-center gap-3" style={{ marginLeft: 'auto' }}>
+            <ThemeToggle />
             <LanguageSwitcher />
             <div ref={notifRef} style={{ position: 'relative' }}>
               <button onClick={() => { setNotifOpen(!notifOpen); setProfileOpen(false); }}

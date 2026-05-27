@@ -43,14 +43,41 @@ function loadBgImages() {
   return {};
 }
 
-function applyColors(colors) {
+
+/* Light-mode equivalents of DEFAULT_COLORS — used when the user hasn't
+   customised a value, so JS doesn't stomp on the CSS [data-theme="light"] rules */
+const LIGHT_DEFAULTS = {
+  primary:    '#2E7BC4',
+  accent:     '#6DB33F',
+  violet:     '#1A3A8F',
+  glow:       '#2E7BC4',
+  background: '#F5F7FA',
+  panel:      '#EBF0F8',
+  nav:        '#DDE6F5',
+  surface:    '#DDE6F5',
+};
+
+function applyColors(colors, theme) {
   const root = document.documentElement;
+
+  // In light mode, fall back to LIGHT_DEFAULTS for any value that the user
+  // hasn't explicitly changed from the dark-mode DEFAULT_COLORS.
+  const effective = theme === 'light'
+    ? Object.fromEntries(
+        Object.entries(colors).map(([k, v]) => [
+          k,
+          v === DEFAULT_COLORS[k] ? (LIGHT_DEFAULTS[k] ?? v) : v,
+        ])
+      )
+    : colors;
+
   Object.entries(CSS_VARS_MAP).forEach(([key, cssVar]) => {
-    if (colors[key]) root.style.setProperty(cssVar, colors[key]);
+    if (effective[key]) root.style.setProperty(cssVar, effective[key]);
   });
-  root.style.setProperty('--primary-rgb', hexToRgb(colors.primary || DEFAULT_COLORS.primary));
-  root.style.setProperty('--accent-rgb', hexToRgb(colors.accent || DEFAULT_COLORS.accent));
+  root.style.setProperty('--primary-rgb', hexToRgb(effective.primary || DEFAULT_COLORS.primary));
+  root.style.setProperty('--accent-rgb',  hexToRgb(effective.accent  || DEFAULT_COLORS.accent));
 }
+
 
 function applyBgImages(images) {
   const root = document.documentElement;
@@ -84,7 +111,7 @@ export function ThemeProvider({ children }) {
     applyBgImages(bgImages);
   }, [theme, bgImages]);
 
-  useEffect(() => { applyColors(colors); localStorage.setItem('bis-theme-config', JSON.stringify(colors)); }, [colors]);
+  useEffect(() => { applyColors(colors, theme); localStorage.setItem('bis-theme-config', JSON.stringify(colors)); }, [colors, theme]);
   useEffect(() => { localStorage.setItem('bis-bg-images', JSON.stringify(bgImages)); }, [bgImages]);
 
   const toggleTheme = useCallback(() => setTheme(p => (p === 'dark' ? 'light' : 'dark')), []);

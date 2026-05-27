@@ -3,6 +3,7 @@ import { Calendar, MapPin, Clock, Users, ArrowRight, Tag, Rocket, Zap, Trophy, H
 import { events as fallbackEvents } from '../data/index';
 import { SectionHeader, Reveal } from '../components/ui/index';
 import { useTranslation } from '../hooks/useTranslation';
+import { useTheme } from '../context/ThemeContext';
 
 const typeColors = {
   'Demo Day': 'badge-blue',
@@ -18,7 +19,7 @@ function TypeIcon({ type }) {
   return <Icon size={14} style={{ marginRight: 4 }} />;
 }
 
-function EventCard({ event, i, localeData, lang = 'en' }) {
+function EventCard({ event, i, localeData, lang = 'en', isLight = false }) {
   const isPast = event.status === 'past';
   const pct = Math.round((event.registered / event.capacity) * 100);
 
@@ -67,11 +68,15 @@ function EventCard({ event, i, localeData, lang = 'en' }) {
             style={{
               width: 72,
               height: 72,
-              background: isPast ? 'rgba(255,255,255,0.04)' : 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(109,40,217,0.2))',
-              border: `1px solid ${isPast ? 'rgba(255,255,255,0.08)' : 'rgba(79,70,229,0.3)'}`,
+              background: isPast
+                ? (isLight ? 'rgba(13,27,62,0.05)' : 'rgba(255,255,255,0.04)')
+                : (isLight ? 'linear-gradient(135deg, rgba(46,123,196,0.15), rgba(26,58,143,0.1))' : 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(109,40,217,0.2))'),
+              border: `1px solid ${isPast
+                ? (isLight ? 'rgba(13,27,62,0.12)' : 'rgba(255,255,255,0.08)')
+                : (isLight ? 'rgba(46,123,196,0.25)' : 'rgba(79,70,229,0.3)')}`,
             }}
           >
-            <p style={{ fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '1.4rem', color: isPast ? 'rgba(240,244,255,0.4)' : '#60A5FA', lineHeight: 1 }}>
+            <p style={{ fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '1.4rem', color: isPast ? (isLight ? 'rgba(13,27,62,0.35)' : 'rgba(240,244,255,0.4)') : (isLight ? '#2E7BC4' : '#60A5FA'), lineHeight: 1 }}>
               {event.date ? new Date(event.date).getDate() : '--'}
             </p>
             <p style={{ fontFamily: 'Outfit', fontSize: '0.72rem', color: 'rgba(240,244,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
@@ -85,17 +90,17 @@ function EventCard({ event, i, localeData, lang = 'en' }) {
                 <TypeIcon type={event.type} /> {event.type}
               </span>
               {isPast && (
-                <span className="badge" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(240,244,255,0.35)', fontSize: '0.66rem' }}>
+                <span className="badge" style={{ background: isLight ? 'rgba(13,27,62,0.05)' : 'rgba(255,255,255,0.06)', border: isLight ? '1px solid rgba(13,27,62,0.12)' : '1px solid rgba(255,255,255,0.1)', color: isLight ? 'rgba(13,27,62,0.45)' : 'rgba(240,244,255,0.35)', fontSize: '0.66rem' }}>
                   Past Event
                 </span>
               )}
             </div>
 
-            <h3 style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '1.05rem', color: '#F0F4FF', marginBottom: 8 }}>
+            <h3 style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '1.05rem', color: 'var(--text-primary)', marginBottom: 8 }}>
               {localeData(event, 'title')}
             </h3>
 
-            <p style={{ color: 'rgba(240,244,255,0.55)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: 14 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: 14 }}>
               {event.description}
             </p>
 
@@ -106,8 +111,8 @@ function EventCard({ event, i, localeData, lang = 'en' }) {
                 { icon: MapPin, text: event.location },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-1">
-                  <Icon size={13} style={{ color: 'rgba(240,244,255,0.3)', flexShrink: 0 }} />
-                  <span style={{ fontFamily: 'Outfit', fontSize: '0.8rem', color: 'rgba(240,244,255,0.45)' }}>{text}</span>
+                  <Icon size={13} style={{ color: 'var(--text-secondary)', flexShrink: 0 }} />
+                  <span style={{ fontFamily: 'Outfit', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{text}</span>
                 </div>
               ))}
             </div>
@@ -117,8 +122,8 @@ function EventCard({ event, i, localeData, lang = 'en' }) {
               <div className="mb-4">
                 <div className="flex justify-between mb-1">
                   <div className="flex items-center gap-1">
-                    <Users size={12} style={{ color: 'rgba(240,244,255,0.4)' }} />
-                    <span style={{ fontFamily: 'Outfit', fontSize: '0.78rem', color: 'rgba(240,244,255,0.45)' }}>
+                    <Users size={12} style={{ color: 'var(--text-secondary)' }} />
+                    <span style={{ fontFamily: 'Outfit', fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
                       {event.registered} / {event.capacity} registered
                     </span>
                   </div>
@@ -144,9 +149,9 @@ function EventCard({ event, i, localeData, lang = 'en' }) {
                 <span key={tag} style={{
                   fontFamily: 'JetBrains Mono',
                   fontSize: '0.66rem',
-                  color: 'rgba(240,244,255,0.4)',
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  color: isLight ? 'rgba(13,27,62,0.55)' : 'var(--text-secondary)',
+                  background: isLight ? 'rgba(46,123,196,0.06)' : 'rgba(255,255,255,0.04)',
+                  border: isLight ? '1px solid rgba(46,123,196,0.15)' : '1px solid rgba(255,255,255,0.08)',
                   padding: '2px 8px',
                   borderRadius: 6,
                 }}>
@@ -170,16 +175,18 @@ function EventCard({ event, i, localeData, lang = 'en' }) {
 
 export default function Events() {
   const { t, localeData, lang } = useTranslation();
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
   const [tab, setTab] = useState('upcoming');
   const [items, setItems] = useState(() => {
-    try { const raw = localStorage.getItem('bis-admin-events'); const d = raw ? JSON.parse(raw) : null; if (Array.isArray(d)) return d; } catch {}
+    try { const raw = localStorage.getItem('bis-admin-events'); const d = raw ? JSON.parse(raw) : null; if (Array.isArray(d) && d.length > 0) return d; } catch {}
     return fallbackEvents;
   });
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
   useEffect(() => {
     const handler = () => {
-      try { const raw = localStorage.getItem('bis-admin-events'); const d = raw ? JSON.parse(raw) : null; if (Array.isArray(d)) setItems(d); } catch {}
+      try { const raw = localStorage.getItem('bis-admin-events'); const d = raw ? JSON.parse(raw) : null; if (Array.isArray(d) && d.length > 0) setItems(d); } catch {}
     };
     window.addEventListener('storage', handler);
     return () => window.removeEventListener('storage', handler);
@@ -198,10 +205,10 @@ export default function Events() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Reveal>
             <div className="section-tag"><Calendar size={14} /> Events</div>
-            <h1 style={{ fontFamily: 'Sora', fontWeight: 800, fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: '#F0F4FF', lineHeight: 1.1, marginBottom: 20, maxWidth: 680 }}>
+            <h1 style={{ fontFamily: 'Sora', fontWeight: 800, fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: 'var(--text-primary)', lineHeight: 1.1, marginBottom: 20, maxWidth: 680 }}>
               Where Founders <span className="gradient-text">Connect & Grow</span>
             </h1>
-            <p style={{ color: 'rgba(240,244,255,0.6)', fontSize: '1.1rem', maxWidth: 560, lineHeight: 1.75 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: 560, lineHeight: 1.75 }}>
               From demo days to hackathons — our events are where Algeria's entrepreneurship ecosystem comes to life.
             </p>
           </Reveal>
@@ -213,8 +220,8 @@ export default function Events() {
           {/* Tabs */}
           <div className="flex gap-2 mb-10"
             style={{
-              background: 'rgba(255,255,255,0.03)',
-              border: '1px solid rgba(255,255,255,0.08)',
+              background: isLight ? 'rgba(46,123,196,0.05)' : 'rgba(255,255,255,0.03)',
+              border: isLight ? '1px solid rgba(46,123,196,0.15)' : '1px solid rgba(255,255,255,0.08)',
               borderRadius: 14,
               padding: 4,
               display: 'inline-flex',
@@ -233,7 +240,7 @@ export default function Events() {
                   borderRadius: 10,
                   border: 'none',
                   background: tab === tabKey ? 'linear-gradient(135deg, #3B82F6, #6D28D9)' : 'transparent',
-                  color: tab === tabKey ? 'white' : 'rgba(240,244,255,0.5)',
+                  color: tab === tabKey ? 'white' : (isLight ? 'rgba(13,27,62,0.55)' : 'var(--text-secondary)'),
                   cursor: 'pointer',
                   transition: 'all 0.3s',
                   textTransform: 'capitalize',
@@ -248,14 +255,14 @@ export default function Events() {
           <div className="flex flex-col gap-6">
             {filtered.length === 0 ? (
               <div className="text-center py-16">
-                <div style={{ marginBottom: 16 }}><MailX size={48} style={{ color: 'rgba(240,244,255,0.3)' }} /></div>
-                <p style={{ fontFamily: 'Sora', fontWeight: 600, color: 'rgba(240,244,255,0.4)', fontSize: '1.1rem' }}>
+                <div style={{ marginBottom: 16 }}><MailX size={48} style={{ color: 'var(--text-secondary)' }} /></div>
+                <p style={{ fontFamily: 'Sora', fontWeight: 600, color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
                   No {tab} events found
                 </p>
               </div>
             ) : (
               filtered.map((event, i) => (
-                <EventCard key={event.id} event={event} i={i} localeData={localeData} lang={lang} />
+                <EventCard key={event.id} event={event} i={i} localeData={localeData} lang={lang} isLight={isLight} />
               ))
             )}
           </div>

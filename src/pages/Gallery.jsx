@@ -3,6 +3,7 @@ import { X, ZoomIn, Image, Camera, Triangle, Mic, PartyPopper, Zap, Users, Build
 import { galleryItems as fallbackGallery } from '../data/index';
 import { SectionHeader, Reveal } from '../components/ui/index';
 import { useTranslation } from '../hooks/useTranslation';
+import { useTheme } from '../context/ThemeContext';
 
 function TypeIcon({ type }) {
   const icons = { symposium: Triangle, seminar: Mic, event: PartyPopper, workshop: Zap, team: Users, facility: Building2, mentorship: Handshake };
@@ -12,6 +13,8 @@ function TypeIcon({ type }) {
 
 export default function Gallery() {
   const { t } = useTranslation();
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
   const [items, setItems] = useState(() => {
     try { const raw = localStorage.getItem('bis-admin-gallery'); const d = raw ? JSON.parse(raw) : null; if (Array.isArray(d)) return d; } catch {}
     return fallbackGallery;
@@ -62,9 +65,15 @@ export default function Gallery() {
                 style={{
                   fontFamily: 'Outfit', fontWeight: 600, fontSize: '0.85rem',
                   padding: '8px 18px', borderRadius: 10,
-                  border: activeType === type ? '1px solid rgba(139,92,246,0.5)' : '1px solid rgba(255,255,255,0.1)',
-                  background: activeType === type ? 'rgba(139,92,246,0.15)' : 'rgba(255,255,255,0.04)',
-                  color: activeType === type ? '#A78BFA' : 'rgba(240,244,255,0.55)',
+                  border: activeType === type
+                    ? (isLight ? '1px solid rgba(46,123,196,0.4)' : '1px solid rgba(139,92,246,0.5)')
+                    : (isLight ? '1px solid rgba(46,123,196,0.18)' : '1px solid rgba(255,255,255,0.1)'),
+                  background: activeType === type
+                    ? (isLight ? 'rgba(46,123,196,0.12)' : 'rgba(139,92,246,0.15)')
+                    : (isLight ? 'rgba(46,123,196,0.04)' : 'rgba(255,255,255,0.04)'),
+                  color: activeType === type
+                    ? (isLight ? '#2E7BC4' : '#A78BFA')
+                    : (isLight ? 'rgba(13,27,62,0.6)' : 'rgba(240,244,255,0.55)'),
                   cursor: 'pointer', transition: 'all 0.2s', textTransform: 'capitalize',
                 }}
               >
@@ -136,7 +145,7 @@ export default function Gallery() {
                 </div>
 
                 {/* Label */}
-                <div style={{
+                <div className="gallery-img-overlay" style={{
                   position: 'absolute', bottom: 0, left: 0, right: 0,
                   padding: '20px 16px 16px',
                   background: 'linear-gradient(to top, rgba(0,0,0,0.85), transparent)',
@@ -188,7 +197,7 @@ export default function Gallery() {
                 display: 'block',
               }}
             />
-            <div style={{ padding: '24px 28px' }}>
+            <div className="gallery-img-overlay" style={{ padding: '24px 28px' }}>
               <h3 style={{ fontFamily: 'Sora', fontWeight: 700, fontSize: '1.2rem', color: '#F0F4FF', marginBottom: 6 }}>
                 {lightbox.title}
               </h3>
